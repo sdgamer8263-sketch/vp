@@ -1,0 +1,80 @@
+{
+  "name": "Custom Pterodactyl Theme",
+  "identifier": "custom-pterodactyl-theme",
+  "description": "A custom theme for Pterodactyl Panel with Discord bot integration and advanced settings.",
+  "version": "1.0.0",
+  "author": "sdgamer8263-sketch",
+  "repository": "https://github.com/sdgamer8263-sketch/my",
+  "icon": "https://avatars.githubusercontent.com/u/12345678?v=4",
+  "website": "https://github.com/sdgamer8263-sketch/my",
+  "support": "https://github.com/sdgamer8263-sketch/my/issues",
+  "framework": "pterodactyl",
+  "permissions": [
+    "admin.settings",
+    "admin.users",
+    "admin.servers"
+  ],
+  "files": [
+    {
+      "source": "pterodactyl-theme-code/resources/scripts/components/admin/ThemeSettings.tsx",
+      "destination": "resources/scripts/components/admin/ThemeSettings.tsx"
+    },
+    {
+      "source": "pterodactyl-theme-code/resources/scripts/components/dashboard/DashboardContainer.tsx",
+      "destination": "resources/scripts/components/dashboard/DashboardContainer.tsx"
+    },
+    {
+      "source": "pterodactyl-theme-code/resources/scripts/components/server/ServerConsole.tsx",
+      "destination": "resources/scripts/components/server/ServerConsole.tsx"
+    },
+    {
+      "source": "pterodactyl-theme-code/routes/admin_theme.php",
+      "destination": "routes/admin_theme.php"
+    },
+    {
+      "source": "pterodactyl-theme-code/database/migrations/2024_01_01_000000_add_panel_name_to_settings_table.php",
+      "destination": "database/migrations/2024_01_01_000000_add_panel_name_to_settings_table.php"
+    }
+  ],
+  "scripts": {
+    "install": "install.sh",
+    "uninstall": "uninstall.sh"
+  },
+  "database": {
+    "migrations": [
+      "2024_01_01_000000_add_panel_name_to_settings_table.php"
+    ]
+  },
+  "settings": {
+    "panel_name": {
+      "type": "string",
+      "default": "Pterodactyl",
+      "label": "Panel Name",
+      "description": "The name of your panel."
+    },
+    "panel_icon": {
+      "type": "string",
+      "default": "",
+      "label": "Panel Icon",
+      "description": "URL to the panel icon."
+    },
+    "custom_wallpaper": {
+      "type": "string",
+      "default": "",
+      "label": "Custom Wallpaper",
+      "description": "URL to the custom wallpaper."
+    },
+    "discord_bot_token": {
+      "type": "string",
+      "default": "",
+      "label": "Discord Bot Token",
+      "description": "The token for your Discord bot."
+    },
+    "discord_guild_id": {
+      "type": "string",
+      "default": "",
+      "label": "Discord Guild ID",
+      "description": "The ID of your Discord server."
+    }
+  }
+}

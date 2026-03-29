@@ -74,6 +74,24 @@ export default function App() {
     github: { enabled: false, url: 'https://github.com/' }
   });
 
+  // Discord Bot State
+  const [discordBot, setDiscordBot] = useState({
+    token: '',
+    guildId: '',
+    panelManageChannel: '',
+    serverManageChannel: '',
+    serverRenewChannel: '',
+    suspensionChannel: ''
+  });
+  const [discordBotInput, setDiscordBotInput] = useState({
+    token: '',
+    guildId: '',
+    panelManageChannel: '',
+    serverManageChannel: '',
+    serverRenewChannel: '',
+    suspensionChannel: ''
+  });
+
   // Server Customization State (Mocked for demonstration)
   const [serverCustomization, setServerCustomization] = useState<Record<string, { icon: string, bg: string }>>({
     'Survival SMP': { icon: '', bg: '' },
@@ -91,6 +109,48 @@ export default function App() {
   const [installedItems, setInstalledItems] = useState<string[]>([]);
   const [compilingItem, setCompilingItem] = useState<string | null>(null);
   const [compiledItems, setCompiledItems] = useState<string[]>([]);
+  const [serverStatus, setServerStatus] = useState<'Online' | 'Offline' | 'Starting'>('Online');
+  const [files, setFiles] = useState([
+    { name: 'world', type: 'Directory', size: '-' },
+    { name: 'plugins', type: 'Directory', size: '-' },
+    { name: 'config', type: 'Directory', size: '-' },
+    { name: 'logs', type: 'Directory', size: '-' },
+    { name: 'server.properties', type: 'File', size: '2 KB' },
+    { name: 'eula.txt', type: 'File', size: '1 KB' },
+    { name: 'spigot.yml', type: 'File', size: '4 KB' },
+  ]);
+  const [subdomains, setSubdomains] = useState([
+    { name: 'play.skahost.com', target: '192.168.1.100:25565', type: 'SRV' },
+  ]);
+  const [newSubdomain, setNewSubdomain] = useState('');
+  const [installedEgg, setInstalledEgg] = useState('Paper');
+  const [players, setPlayers] = useState([
+    { name: 'Notch', ping: '12ms', rank: 'Owner' },
+    { name: 'Jeb_', ping: '24ms', rank: 'Admin' },
+    { name: 'Dinnerbone', ping: '45ms', rank: 'Developer' },
+    { name: 'Steve', ping: '120ms', rank: 'Player' },
+    { name: 'Alex', ping: '85ms', rank: 'Player' }
+  ]);
+  const [balance, setBalance] = useState(24.50);
+  const [invoices, setInvoices] = useState([
+    { id: '#INV-0042', date: 'Mar 25, 2026', amount: '12.00', status: 'Unpaid' },
+    { id: '#INV-0041', date: 'Feb 25, 2026', amount: '12.00', status: 'Paid' },
+  ]);
+  const [servers, setServers] = useState([
+    { name: 'Survival SMP', status: serverStatus, cpu: '45%', ram: '4.2 GB', node: 'Node-01' },
+    { name: 'Lobby', status: 'Online', cpu: '12%', ram: '1.1 GB', node: 'Node-01' },
+    { name: 'Bedwars-1', status: 'Starting', cpu: '89%', ram: '2.4 GB', node: 'Node-02' },
+    { name: 'Development', status: 'Offline', cpu: '0%', ram: '0 GB', node: 'Node-03' },
+  ]);
+  const [users, setUsers] = useState([
+    { id: 1, name: 'Admin User', email: 'admin@skahost.com', role: 'Administrator' },
+    { id: 2, name: 'Test User', email: 'user@example.com', role: 'Standard' },
+    { id: 3, name: 'John Doe', email: 'john@example.com', role: 'Standard' },
+  ]);
+  const [tickets, setTickets] = useState([
+    { id: '#TKT-1024', subject: 'Server crashing on startup', status: 'Open', updated: '2 hours ago' },
+    { id: '#TKT-1018', subject: 'How to install Modpacks?', status: 'Closed', updated: '3 days ago' },
+  ]);
 
   const handleInstall = (name: string) => {
     setInstallingItem(name);
@@ -148,9 +208,11 @@ export default function App() {
     setBillingSettings(billingSettingsInput);
     setAutoSuspend(autoSuspendInput);
     setStorePlans(storePlansInput);
+    setDiscordBot(discordBotInput);
     if (customWallpaperInput) {
       setWallpaper(customWallpaperInput);
     }
+    alert('Settings saved successfully!');
   };
 
   const handleSaveServerSettings = (serverName: string) => {
@@ -158,6 +220,7 @@ export default function App() {
       ...prev,
       [serverName]: serverCustomizationInput
     }));
+    alert('Server settings saved successfully!');
   };
 
   const serverTabs = [
@@ -322,6 +385,7 @@ export default function App() {
                         <p className={`text-xs font-bold uppercase tracking-wider px-4 ${themeMode === 'dark' ? 'text-white/40' : 'text-slate-400'}`}>Administration</p>
                       </div>
                       <NavItem icon={<User size={20} />} label="Users" active={activeTab === 'Users'} onClick={() => setActiveTab('Users')} themeMode={themeMode} />
+                      <NavItem icon={<Settings size={20} />} label="Settings" active={activeTab === 'Settings'} onClick={() => setActiveTab('Settings')} themeMode={themeMode} />
                     </>
                   )}
                 </>
@@ -393,18 +457,18 @@ export default function App() {
                       <p className={`text-xs ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>{isAdmin ? 'admin' : 'user'}@skahost.com</p>
                     </div>
                     <div className="p-2">
-                      <DropdownItem icon={<User size={16} />} label="My Account" themeMode={themeMode} />
-                      <DropdownItem icon={<Key size={16} />} label="API Credentials" themeMode={themeMode} />
+                      <DropdownItem onClick={() => alert('My Account!')} icon={<User size={16} />} label="My Account" themeMode={themeMode} />
+                      <DropdownItem onClick={() => alert('API Credentials!')} icon={<Key size={16} />} label="API Credentials" themeMode={themeMode} />
                       <div className="h-px bg-white/10 my-2 mx-2" />
                       <div onClick={() => {
                         setIsAdmin(!isAdmin);
                         setUserDropdownOpen(false);
                         if (isAdmin && activeTab === 'Settings') setActiveTab('Servers');
                       }}>
-                        <DropdownItem icon={<ShieldAlert size={16} />} label={`Switch to ${isAdmin ? 'User' : 'Admin'}`} themeMode={themeMode} />
+                        <DropdownItem onClick={() => setIsAdmin(!isAdmin)} icon={<ShieldAlert size={16} />} label={`Switch to ${isAdmin ? 'User' : 'Admin'}`} themeMode={themeMode} />
                       </div>
                       <div onClick={() => setAuthState('login')}>
-                        <DropdownItem icon={<LogOut size={16} />} label="Logout" themeMode={themeMode} danger />
+                        <DropdownItem onClick={() => setAuthState('login')} icon={<LogOut size={16} />} label="Logout" themeMode={themeMode} danger />
                       </div>
                     </div>
                   </motion.div>
@@ -418,360 +482,390 @@ export default function App() {
         <div className="p-8 flex-1 space-y-8">
           
           {activeTab === 'Dashboard' && (
-            <>
-              <div className="space-y-6 mb-8">
-                <h2 className="text-3xl font-bold tracking-tight">Welcome back, Admin!</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                  <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`p-3 rounded-xl ${themeMode === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
-                        <Server size={24} />
-                      </div>
+            <div className={`backdrop-blur-lg border rounded-2xl p-8 shadow-xl max-w-2xl mx-auto ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
+              <h2 className="text-3xl font-bold tracking-tight mb-6">Profile Settings</h2>
+              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Profile updated successfully!'); }}>
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Username</label>
+                  <input type="text" defaultValue={isAdmin ? "admin" : "user"} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Email</label>
+                  <input type="email" defaultValue={isAdmin ? "admin@skahost.com" : "user@skahost.com"} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} />
+                </div>
+                <div className="pt-4 border-t border-white/10">
+                  <h3 className="text-lg font-medium mb-4">Change Password</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Current Password</label>
+                      <input type="password" placeholder="••••••••" className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} />
                     </div>
-                    <h3 className={`text-sm font-semibold mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Total Servers</h3>
-                    <p className="text-3xl font-bold">4</p>
-                  </div>
-                  
-                  <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`p-3 rounded-xl ${themeMode === 'dark' ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-100 text-purple-600'}`}>
-                        <Cpu size={24} />
-                      </div>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>New Password</label>
+                      <input type="password" placeholder="••••••••" className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} />
                     </div>
-                    <h3 className={`text-sm font-semibold mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Total CPU Usage</h3>
-                    <p className="text-3xl font-bold">146%</p>
-                  </div>
-
-                  <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`p-3 rounded-xl ${themeMode === 'dark' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-600'}`}>
-                        <Database size={24} />
-                      </div>
-                    </div>
-                    <h3 className={`text-sm font-semibold mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Total RAM Usage</h3>
-                    <p className="text-3xl font-bold">7.7 GB</p>
-                  </div>
-
-                  <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`p-3 rounded-xl ${themeMode === 'dark' ? 'bg-amber-500/20 text-amber-400' : 'bg-amber-100 text-amber-600'}`}>
-                        <LifeBuoy size={24} />
-                      </div>
-                    </div>
-                    <h3 className={`text-sm font-semibold mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Active Tickets</h3>
-                    <p className="text-3xl font-bold">1</p>
                   </div>
                 </div>
-              </div>
+                <button type="button" onClick={() => alert('Profile Updated!')} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors">
+                  Update Profile
+                </button>
+              </form>
+            </div>
+          )}
 
-              {isAdmin && (
-                <div className={`backdrop-blur-lg border rounded-2xl p-8 shadow-xl max-w-4xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
-                  <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                    <Settings size={24} className="text-blue-500" />
-                    Settings
-                  </h3>
-                  
-                  <form onSubmit={handleSaveSettings} className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {/* Panel Identity */}
-                      <div className="space-y-6">
-                        <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Panel Identity</h4>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                            Panel Name
+          {activeTab === 'Settings' && isAdmin && (
+            <div className={`backdrop-blur-lg border rounded-2xl p-8 shadow-xl max-w-4xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
+              <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <Settings size={24} className="text-blue-500" />
+                Panel Settings
+              </h3>
+              
+              <form onSubmit={handleSaveSettings} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Panel Identity */}
+                  <div className="space-y-6">
+                    <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Panel Identity</h4>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                        Panel Name
+                      </label>
+                      <input 
+                        type="text" 
+                        value={panelNameInput}
+                        onChange={(e) => setPanelNameInput(e.target.value)}
+                        className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                        placeholder="Enter Panel Name"
+                      />
+                    </div>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                        Panel Icon (URL or Upload)
+                      </label>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          value={panelIconInput}
+                          onChange={(e) => setPanelIconInput(e.target.value)}
+                          className={`flex-1 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder="https://example.com/icon.png"
+                        />
+                        <button type="button" onClick={() => handleFileUpload(setPanelIconInput)} className={`px-4 py-2 rounded-xl border transition-colors ${themeMode === 'dark' ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
+                          Upload
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                        Panel Background Image (URL or Upload)
+                      </label>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          value={customWallpaperInput}
+                          onChange={(e) => setCustomWallpaperInput(e.target.value)}
+                          className={`flex-1 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder="https://example.com/bg.jpg"
+                        />
+                        <button type="button" onClick={() => handleFileUpload(setCustomWallpaperInput)} className={`px-4 py-2 rounded-xl border transition-colors ${themeMode === 'dark' ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
+                          Upload
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Social Links */}
+                  <div className="space-y-6">
+                    <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Social Media Links</h4>
+                    {Object.entries(socialLinksInput).map(([platform, data]: [string, any]) => (
+                      <div key={platform}>
+                        <div className="flex items-center justify-between mb-2">
+                          <label className={`block text-sm font-medium capitalize ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                            {platform}
                           </label>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="sr-only peer" 
+                              checked={data.enabled}
+                              onChange={(e) => setSocialLinksInput(prev => ({ ...prev, [platform]: { ...prev[platform as keyof typeof socialLinksInput], enabled: e.target.checked } }))}
+                            />
+                            <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                          </label>
+                        </div>
+                        <input 
+                          type="url" 
+                          value={data.url}
+                          disabled={!data.enabled}
+                          onChange={(e) => setSocialLinksInput(prev => ({ ...prev, [platform]: { ...prev[platform as keyof typeof socialLinksInput], url: e.target.value } }))}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${!data.enabled ? 'opacity-50 cursor-not-allowed' : ''} ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder={`https://${platform}.com/`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Billing & Payment Setup */}
+                <div className="space-y-6 mt-8">
+                  <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Billing & Payment Setup</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                          Currency
+                        </label>
+                        <select 
+                          value={billingSettingsInput.currency}
+                          onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, currency: e.target.value }))}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`}
+                        >
+                          <option value="USD">USD ($)</option>
+                          <option value="EUR">EUR (€)</option>
+                          <option value="GBP">GBP (£)</option>
+                          <option value="INR">INR (₹)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                          Tax Rate (%)
+                        </label>
+                        <input 
+                          type="number" 
+                          value={billingSettingsInput.taxRate}
+                          onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, taxRate: e.target.value }))}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder="e.g., 20"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                          PayPal Client ID
+                        </label>
+                        <input 
+                          type="text" 
+                          value={billingSettingsInput.paypalClientId}
+                          onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, paypalClientId: e.target.value }))}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder="Enter PayPal Client ID"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                          Stripe Publishable Key
+                        </label>
+                        <input 
+                          type="text" 
+                          value={billingSettingsInput.stripePublicKey}
+                          onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, stripePublicKey: e.target.value }))}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder="pk_test_..."
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                          Stripe Secret Key
+                        </label>
+                        <input 
+                          type="password" 
+                          value={billingSettingsInput.stripeSecretKey}
+                          onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, stripeSecretKey: e.target.value }))}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                          placeholder="sk_test_..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Auto Suspend Settings */}
+                <div className="space-y-6 mt-8">
+                  <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Auto Suspend Settings</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <label className={`flex items-center gap-3 cursor-pointer ${themeMode === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                        <div className="relative">
                           <input 
-                            type="text" 
-                            value={panelNameInput}
-                            onChange={(e) => setPanelNameInput(e.target.value)}
-                            className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                            placeholder="Enter Panel Name"
+                            type="checkbox" 
+                            className="sr-only"
+                            checked={autoSuspendInput.enabled}
+                            onChange={(e) => setAutoSuspendInput(prev => ({ ...prev, enabled: e.target.checked }))}
                           />
+                          <div className={`block w-14 h-8 rounded-full transition-colors ${autoSuspendInput.enabled ? 'bg-blue-500' : (themeMode === 'dark' ? 'bg-white/20' : 'bg-slate-300')}`}></div>
+                          <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${autoSuspendInput.enabled ? 'transform translate-x-6' : ''}`}></div>
                         </div>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                            Panel Icon (URL or Upload)
-                          </label>
-                          <div className="flex gap-2">
-                            <input 
-                              type="text" 
-                              value={panelIconInput}
-                              onChange={(e) => setPanelIconInput(e.target.value)}
-                              className={`flex-1 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder="https://example.com/icon.png"
-                            />
-                            <button type="button" onClick={() => handleFileUpload(setPanelIconInput)} className={`px-4 py-2 rounded-xl border transition-colors ${themeMode === 'dark' ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
-                              Upload
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                            Panel Background Image (URL or Upload)
-                          </label>
-                          <div className="flex gap-2">
-                            <input 
-                              type="text" 
-                              value={customWallpaperInput}
-                              onChange={(e) => setCustomWallpaperInput(e.target.value)}
-                              className={`flex-1 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder="https://example.com/bg.jpg"
-                            />
-                            <button type="button" onClick={() => handleFileUpload(setCustomWallpaperInput)} className={`px-4 py-2 rounded-xl border transition-colors ${themeMode === 'dark' ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
-                              Upload
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Social Links */}
-                      <div className="space-y-6">
-                        <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Social Media Links</h4>
-                        {Object.entries(socialLinksInput).map(([platform, data]: [string, any]) => (
-                          <div key={platform}>
-                            <div className="flex items-center justify-between mb-2">
-                              <label className={`block text-sm font-medium capitalize ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                                {platform}
-                              </label>
-                              <label className="relative inline-flex items-center cursor-pointer">
-                                <input 
-                                  type="checkbox" 
-                                  className="sr-only peer" 
-                                  checked={data.enabled}
-                                  onChange={(e) => setSocialLinksInput(prev => ({ ...prev, [platform]: { ...prev[platform as keyof typeof socialLinksInput], enabled: e.target.checked } }))}
-                                />
-                                <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
-                              </label>
-                            </div>
-                            <input 
-                              type="url" 
-                              value={data.url}
-                              disabled={!data.enabled}
-                              onChange={(e) => setSocialLinksInput(prev => ({ ...prev, [platform]: { ...prev[platform as keyof typeof socialLinksInput], url: e.target.value } }))}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${!data.enabled ? 'opacity-50 cursor-not-allowed' : ''} ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder={`https://${platform}.com/`}
-                            />
-                          </div>
-                        ))}
+                        <span className="font-medium">Enable Auto Suspend</span>
+                      </label>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
+                          Suspend after (days overdue)
+                        </label>
+                        <input 
+                          type="number" 
+                          value={autoSuspendInput.days}
+                          onChange={(e) => setAutoSuspendInput(prev => ({ ...prev, days: parseInt(e.target.value) || 0 }))}
+                          disabled={!autoSuspendInput.enabled}
+                          className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${!autoSuspendInput.enabled ? 'opacity-50 cursor-not-allowed' : ''} ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
+                        />
                       </div>
                     </div>
-
-                    {/* Billing & Payment Setup */}
-                    <div className="space-y-6 mt-8">
-                      <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Billing & Payment Setup</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-6">
-                          <div>
-                            <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                              Currency
-                            </label>
-                            <select 
-                              value={billingSettingsInput.currency}
-                              onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, currency: e.target.value }))}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`}
-                            >
-                              <option value="USD">USD ($)</option>
-                              <option value="EUR">EUR (€)</option>
-                              <option value="GBP">GBP (£)</option>
-                              <option value="INR">INR (₹)</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                              Tax Rate (%)
-                            </label>
-                            <input 
-                              type="number" 
-                              value={billingSettingsInput.taxRate}
-                              onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, taxRate: e.target.value }))}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder="e.g., 20"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-6">
-                          <div>
-                            <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                              PayPal Client ID
-                            </label>
-                            <input 
-                              type="text" 
-                              value={billingSettingsInput.paypalClientId}
-                              onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, paypalClientId: e.target.value }))}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder="Enter PayPal Client ID"
-                            />
-                          </div>
-                          <div>
-                            <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                              Stripe Publishable Key
-                            </label>
-                            <input 
-                              type="text" 
-                              value={billingSettingsInput.stripePublicKey}
-                              onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, stripePublicKey: e.target.value }))}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder="pk_test_..."
-                            />
-                          </div>
-                          <div>
-                            <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                              Stripe Secret Key
-                            </label>
-                            <input 
-                              type="password" 
-                              value={billingSettingsInput.stripeSecretKey}
-                              onChange={(e) => setBillingSettingsInput(prev => ({ ...prev, stripeSecretKey: e.target.value }))}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                              placeholder="sk_test_..."
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Auto Suspend Settings */}
-                    <div className="space-y-6 mt-8">
-                      <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Auto Suspend Settings</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-6">
-                          <label className={`flex items-center gap-3 cursor-pointer ${themeMode === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                            <div className="relative">
-                              <input 
-                                type="checkbox" 
-                                className="sr-only"
-                                checked={autoSuspendInput.enabled}
-                                onChange={(e) => setAutoSuspendInput(prev => ({ ...prev, enabled: e.target.checked }))}
-                              />
-                              <div className={`block w-14 h-8 rounded-full transition-colors ${autoSuspendInput.enabled ? 'bg-blue-500' : (themeMode === 'dark' ? 'bg-white/20' : 'bg-slate-300')}`}></div>
-                              <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${autoSuspendInput.enabled ? 'transform translate-x-6' : ''}`}></div>
-                            </div>
-                            <span className="font-medium">Enable Auto Suspend</span>
-                          </label>
-                          <div>
-                            <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>
-                              Suspend after (days overdue)
-                            </label>
-                            <input 
-                              type="number" 
-                              value={autoSuspendInput.days}
-                              onChange={(e) => setAutoSuspendInput(prev => ({ ...prev, days: parseInt(e.target.value) || 0 }))}
-                              disabled={!autoSuspendInput.enabled}
-                              className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${!autoSuspendInput.enabled ? 'opacity-50 cursor-not-allowed' : ''} ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white placeholder-white/50' : 'bg-white/50 border-white/40 text-slate-900 placeholder-slate-500'}`}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Store Plans Settings */}
-                    <div className="space-y-6 mt-8">
-                      <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Store Plans Configuration</h4>
-                      <div className="space-y-4">
-                        {storePlansInput.map((plan, index) => (
-                          <div key={index} className={`p-4 rounded-xl border ${themeMode === 'dark' ? 'bg-black/20 border-white/10' : 'bg-white/50 border-white/40'}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                              <div>
-                                <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Plan Name</label>
-                                <input 
-                                  type="text" 
-                                  value={plan.name}
-                                  onChange={(e) => {
-                                    const newPlans = [...storePlansInput];
-                                    newPlans[index].name = e.target.value;
-                                    setStorePlansInput(newPlans);
-                                  }}
-                                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
-                                />
-                              </div>
-                              <div>
-                                <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>RAM</label>
-                                <input 
-                                  type="text" 
-                                  value={plan.ram}
-                                  onChange={(e) => {
-                                    const newPlans = [...storePlansInput];
-                                    newPlans[index].ram = e.target.value;
-                                    setStorePlansInput(newPlans);
-                                  }}
-                                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
-                                />
-                              </div>
-                              <div>
-                                <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>CPU</label>
-                                <input 
-                                  type="text" 
-                                  value={plan.cpu}
-                                  onChange={(e) => {
-                                    const newPlans = [...storePlansInput];
-                                    newPlans[index].cpu = e.target.value;
-                                    setStorePlansInput(newPlans);
-                                  }}
-                                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
-                                />
-                              </div>
-                              <div>
-                                <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Storage</label>
-                                <input 
-                                  type="text" 
-                                  value={plan.disk}
-                                  onChange={(e) => {
-                                    const newPlans = [...storePlansInput];
-                                    newPlans[index].disk = e.target.value;
-                                    setStorePlansInput(newPlans);
-                                  }}
-                                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
-                                />
-                              </div>
-                              <div>
-                                <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Price</label>
-                                <input 
-                                  type="text" 
-                                  value={plan.price}
-                                  onChange={(e) => {
-                                    const newPlans = [...storePlansInput];
-                                    newPlans[index].price = e.target.value;
-                                    setStorePlansInput(newPlans);
-                                  }}
-                                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className={`pt-6 border-t ${themeMode === 'dark' ? 'border-white/10' : 'border-white/30'} flex gap-4`}>
-                      <button 
-                        type="submit"
-                        className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors"
-                      >
-                        <Save size={20} />
-                        Save Settings
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={(e) => { e.preventDefault(); handleWallpaperChange(e as any); }}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-colors border ${themeMode === 'dark' ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white' : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-900'}`}
-                      >
-                        <ImageIcon size={20} />
-                        Apply Background
-                      </button>
-                    </div>
-                  </form>
+                  </div>
                 </div>
-              )}
-            </>
+
+                {/* Store Plans Settings */}
+                <div className="space-y-6 mt-8">
+                  <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Store Plans Configuration</h4>
+                  <div className="space-y-4">
+                    {storePlansInput.map((plan, index) => (
+                      <div key={index} className={`p-4 rounded-xl border ${themeMode === 'dark' ? 'bg-black/20 border-white/10' : 'bg-white/50 border-white/40'}`}>
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Plan Name</label>
+                            <input 
+                              type="text" 
+                              value={plan.name}
+                              onChange={(e) => {
+                                const newPlans = [...storePlansInput];
+                                newPlans[index].name = e.target.value;
+                                setStorePlansInput(newPlans);
+                              }}
+                              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>RAM</label>
+                            <input 
+                              type="text" 
+                              value={plan.ram}
+                              onChange={(e) => {
+                                const newPlans = [...storePlansInput];
+                                newPlans[index].ram = e.target.value;
+                                setStorePlansInput(newPlans);
+                              }}
+                              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>CPU</label>
+                            <input 
+                              type="text" 
+                              value={plan.cpu}
+                              onChange={(e) => {
+                                const newPlans = [...storePlansInput];
+                                newPlans[index].cpu = e.target.value;
+                                setStorePlansInput(newPlans);
+                              }}
+                              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Storage</label>
+                            <input 
+                              type="text" 
+                              value={plan.disk}
+                              onChange={(e) => {
+                                const newPlans = [...storePlansInput];
+                                newPlans[index].disk = e.target.value;
+                                setStorePlansInput(newPlans);
+                              }}
+                              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Price</label>
+                            <input 
+                              type="text" 
+                              value={plan.price}
+                              onChange={(e) => {
+                                const newPlans = [...storePlansInput];
+                                newPlans[index].price = e.target.value;
+                                setStorePlansInput(newPlans);
+                              }}
+                              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Discord Bot Setup */}
+                <div className="space-y-6 mt-8">
+                  <h4 className={`text-lg font-medium border-b pb-2 ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>Discord Bot Setup</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Bot Token</label>
+                        <input type="password" value={discordBotInput.token} onChange={(e) => setDiscordBotInput(prev => ({ ...prev, token: e.target.value }))} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} placeholder="MTAx..." />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Guild (Server) ID</label>
+                        <input type="text" value={discordBotInput.guildId} onChange={(e) => setDiscordBotInput(prev => ({ ...prev, guildId: e.target.value }))} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} placeholder="123456789012345678" />
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Panel Manage Channel ID</label>
+                        <input type="text" value={discordBotInput.panelManageChannel} onChange={(e) => setDiscordBotInput(prev => ({ ...prev, panelManageChannel: e.target.value }))} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} placeholder="Channel ID" />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Server Manage Channel ID</label>
+                        <input type="text" value={discordBotInput.serverManageChannel} onChange={(e) => setDiscordBotInput(prev => ({ ...prev, serverManageChannel: e.target.value }))} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} placeholder="Channel ID" />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Server Renew Channel ID</label>
+                        <input type="text" value={discordBotInput.serverRenewChannel} onChange={(e) => setDiscordBotInput(prev => ({ ...prev, serverRenewChannel: e.target.value }))} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} placeholder="Channel ID" />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-700'}`}>Suspension Message Channel ID</label>
+                        <input type="text" value={discordBotInput.suspensionChannel} onChange={(e) => setDiscordBotInput(prev => ({ ...prev, suspensionChannel: e.target.value }))} className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} placeholder="Channel ID" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`pt-6 border-t ${themeMode === 'dark' ? 'border-white/10' : 'border-white/30'} flex gap-4`}>
+                  <button 
+                    type="submit"
+                    className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors"
+                  >
+                    <Save size={20} />
+                    Save Settings
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); handleWallpaperChange(e as any); }}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-colors border ${themeMode === 'dark' ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white' : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-900'}`}
+                  >
+                    <ImageIcon size={20} />
+                    Apply Background
+                  </button>
+                </div>
+              </form>
+            </div>
           )}
 
           {activeTab === 'Servers' && (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              <ServerCard name="Survival SMP" status="Online" cpu="45%" ram="4.2 GB" node="Node-01" onClick={() => { setActiveTab('ServerView'); setActiveServerTab('Console'); }} themeMode={themeMode} icon={serverCustomization['Survival SMP']?.icon} bg={serverCustomization['Survival SMP']?.bg} />
-              <ServerCard name="Lobby" status="Online" cpu="12%" ram="1.1 GB" node="Node-01" onClick={() => { setActiveTab('ServerView'); setActiveServerTab('Console'); }} themeMode={themeMode} icon={serverCustomization['Lobby']?.icon} bg={serverCustomization['Lobby']?.bg} />
-              <ServerCard name="Bedwars-1" status="Starting" cpu="89%" ram="2.4 GB" node="Node-02" onClick={() => { setActiveTab('ServerView'); setActiveServerTab('Console'); }} themeMode={themeMode} icon={serverCustomization['Bedwars-1']?.icon} bg={serverCustomization['Bedwars-1']?.bg} />
-              <ServerCard name="Development" status="Offline" cpu="0%" ram="0 GB" node="Node-03" onClick={() => { setActiveTab('ServerView'); setActiveServerTab('Console'); }} themeMode={themeMode} icon={serverCustomization['Development']?.icon} bg={serverCustomization['Development']?.bg} />
+              {servers.map(server => (
+                <ServerCard 
+                  key={server.name}
+                  name={server.name} 
+                  status={server.name === 'Survival SMP' ? serverStatus : server.status as 'Online' | 'Offline' | 'Starting'} 
+                  cpu={server.name === 'Survival SMP' ? (serverStatus === 'Online' ? '45%' : serverStatus === 'Starting' ? '89%' : '0%') : server.cpu} 
+                  ram={server.name === 'Survival SMP' ? (serverStatus === 'Online' ? '4.2 GB' : serverStatus === 'Starting' ? '2.4 GB' : '0 GB') : server.ram} 
+                  node={server.node} 
+                  onClick={() => { setActiveTab('ServerView'); setActiveServerTab('Console'); }} 
+                  themeMode={themeMode} 
+                  icon={serverCustomization[server.name]?.icon} 
+                  bg={serverCustomization[server.name]?.bg} 
+                  onStart={server.name === 'Survival SMP' ? () => { setServerStatus('Starting'); setTimeout(() => setServerStatus('Online'), 2000); } : undefined} 
+                  onRestart={server.name === 'Survival SMP' ? () => { setServerStatus('Starting'); setTimeout(() => setServerStatus('Online'), 2000); } : undefined} 
+                  onStop={server.name === 'Survival SMP' ? () => setServerStatus('Offline') : undefined} 
+                />
+              ))}
             </div>
           )}
 
@@ -783,8 +877,8 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-gradient-to-br from-blue-900/40 to-purple-900/40 border-white/20' : 'bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200'}`}>
                     <h3 className={`text-sm font-semibold mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Account Balance</h3>
-                    <p className="text-4xl font-bold mb-4">{billingSettings.currency === 'USD' ? '$' : billingSettings.currency === 'EUR' ? '€' : billingSettings.currency === 'GBP' ? '£' : '₹'}24.50</p>
-                    <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-blue-500/30">Add Funds</button>
+                    <p className="text-4xl font-bold mb-4">{billingSettings.currency === 'USD' ? '$' : billingSettings.currency === 'EUR' ? '€' : billingSettings.currency === 'GBP' ? '£' : '₹'}{balance.toFixed(2)}</p>
+                    <button onClick={() => setBalance(balance + 10)} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-blue-500/30">Add Funds</button>
                   </div>
                   <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
                     <h3 className={`text-sm font-semibold mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Active Services</h3>
@@ -793,8 +887,12 @@ export default function App() {
                   </div>
                   <div className={`backdrop-blur-lg border rounded-2xl p-6 shadow-xl ${themeMode === 'dark' ? 'bg-white/10 border-white/20' : 'bg-white/40 border-white/40'}`}>
                     <h3 className={`text-sm font-semibold mb-2 ${themeMode === 'dark' ? 'text-white/70' : 'text-slate-600'}`}>Unpaid Invoices</h3>
-                    <p className="text-4xl font-bold mb-4 text-red-500">1</p>
-                    <button className="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-red-500/30">Pay Now ({billingSettings.currency === 'USD' ? '$' : billingSettings.currency === 'EUR' ? '€' : billingSettings.currency === 'GBP' ? '£' : '₹'}12.00)</button>
+                    <p className="text-4xl font-bold mb-4 text-red-500">{invoices.filter(i => i.status === 'Unpaid').length}</p>
+                    {invoices.filter(i => i.status === 'Unpaid').length > 0 ? (
+                      <button onClick={() => setInvoices(invoices.map(i => i.status === 'Unpaid' ? { ...i, status: 'Paid' } : i))} className="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-red-500/30">Pay Now ({billingSettings.currency === 'USD' ? '$' : billingSettings.currency === 'EUR' ? '€' : billingSettings.currency === 'GBP' ? '£' : '₹'}12.00)</button>
+                    ) : (
+                      <button disabled className="w-full bg-emerald-500/50 text-white py-2.5 rounded-xl font-medium transition-colors cursor-not-allowed">All Paid</button>
+                    )}
                   </div>
                 </div>
 
@@ -803,11 +901,7 @@ export default function App() {
                     <h3 className="text-lg font-bold flex items-center gap-2"><Receipt size={20} className="text-blue-500"/> Recent Invoices</h3>
                   </div>
                   <div className="divide-y divide-white/10">
-                    {[
-                      { id: '#INV-0042', date: 'Mar 25, 2026', amount: '12.00', status: 'Unpaid' },
-                      { id: '#INV-0041', date: 'Feb 25, 2026', amount: '12.00', status: 'Paid' },
-                      { id: '#INV-0040', date: 'Jan 25, 2026', amount: '12.00', status: 'Paid' },
-                    ].map(inv => (
+                    {invoices.map(inv => (
                       <div key={inv.id} className={`px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors ${themeMode === 'dark' ? '' : 'hover:bg-white/50'}`}>
                         <div>
                           <p className="font-bold">{inv.id}</p>
@@ -818,7 +912,7 @@ export default function App() {
                           <span className={`text-xs px-2 py-1 rounded-md font-medium ${inv.status === 'Paid' ? (themeMode === 'dark' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-600') : (themeMode === 'dark' ? 'bg-red-500/20 text-red-400' : 'bg-red-100 text-red-600')}`}>
                             {inv.status}
                           </span>
-                          <button className={`p-2 rounded-lg transition-colors ${themeMode === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}>
+                          <button onClick={() => alert('Invoice Downloaded!')} className={`p-2 rounded-lg transition-colors ${themeMode === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}>
                             <Download size={16} />
                           </button>
                         </div>
@@ -864,7 +958,7 @@ export default function App() {
                           <span className="font-medium">3 Slots</span>
                         </div>
                       </div>
-                      <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${plan.popular ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-500/30' : (themeMode === 'dark' ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-white hover:bg-slate-50 text-slate-900 shadow-slate-200/50')}`}>
+                      <button onClick={() => { setServers([...servers, { name: `${plan.name} Server`, status: 'Starting', cpu: '0%', ram: plan.ram, node: 'Node-04' }]); setActiveTab('Servers'); alert('Order Placed!'); }} className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${plan.popular ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-500/30' : (themeMode === 'dark' ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-white hover:bg-slate-50 text-slate-900 shadow-slate-200/50')}`}>
                         Order Now
                       </button>
                     </div>
@@ -882,20 +976,17 @@ export default function App() {
                 <h3 className="text-lg font-bold flex items-center gap-2"><LifeBuoy size={20} className="text-blue-500"/> Support Tickets</h3>
                 <div className="flex gap-2">
                   {isAdmin && (
-                    <button className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border ${themeMode === 'dark' ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white' : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-900'}`}>
+                    <button onClick={() => alert('Manage Tickets!')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border ${themeMode === 'dark' ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white' : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-900'}`}>
                       <Settings size={16} /> Manage Tickets
                     </button>
                   )}
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                  <button onClick={() => setTickets([{ id: `#TKT-${Math.floor(Math.random() * 9000) + 1000}`, subject: 'New Support Request', status: 'Open', updated: 'Just now' }, ...tickets])} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
                     <Ticket size={16} /> New Ticket
                   </button>
                 </div>
               </div>
               <div className="divide-y divide-white/10">
-                {[
-                  { id: '#TKT-1024', subject: 'Server crashing on startup', status: 'Open', updated: '2 hours ago' },
-                  { id: '#TKT-1018', subject: 'How to install Modpacks?', status: 'Closed', updated: '3 days ago' },
-                ].map(ticket => (
+                {tickets.map(ticket => (
                   <div key={ticket.id} className={`px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer ${themeMode === 'dark' ? '' : 'hover:bg-white/50'}`}>
                     <div>
                       <p className="font-bold">{ticket.subject}</p>
@@ -927,12 +1018,12 @@ export default function App() {
                   {serverCustomization['Survival SMP']?.icon ? (
                     <img src={serverCustomization['Survival SMP'].icon} alt="Survival SMP" className="w-12 h-12 rounded-xl object-cover shadow-lg" />
                   ) : (
-                    <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse" />
+                    <div className={`w-3 h-3 rounded-full ${serverStatus === 'Online' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]' : serverStatus === 'Starting' ? 'bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)] animate-pulse' : 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]'}`} />
                   )}
                   <div>
                     <h2 className="text-xl font-bold flex items-center gap-2">
                       Survival SMP 
-                      {serverCustomization['Survival SMP']?.icon && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse" />}
+                      {serverCustomization['Survival SMP']?.icon && <div className={`w-2 h-2 rounded-full ${serverStatus === 'Online' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]' : serverStatus === 'Starting' ? 'bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)] animate-pulse' : 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]'}`} />}
                     </h2>
                     <div className="flex items-center gap-2 mt-1">
                       <p className={`text-sm font-mono transition-all duration-300 ${themeMode === 'dark' ? 'text-white/60' : 'text-slate-500'} ${ipBlurred ? 'blur-md select-none opacity-50' : ''}`}>
@@ -949,13 +1040,13 @@ export default function App() {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <button className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-emerald-500/20">
+                  <button onClick={() => { setServerStatus('Starting'); setTimeout(() => setServerStatus('Online'), 2000); }} className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-emerald-500/20">
                     <Play size={18} /> Start
                   </button>
-                  <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-blue-500/20">
+                  <button onClick={() => { setServerStatus('Starting'); setTimeout(() => setServerStatus('Online'), 2000); }} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-blue-500/20">
                     <RotateCcw size={18} /> Restart
                   </button>
-                  <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-red-500/20">
+                  <button onClick={() => setServerStatus('Offline')} className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-red-500/20">
                     <Square size={18} /> Stop
                   </button>
                 </div>
@@ -1040,27 +1131,18 @@ export default function App() {
                     <div className="flex items-center gap-2 text-sm font-medium">
                       <span className="text-blue-400">/home/container</span>
                     </div>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    <button onClick={() => setFiles([{ name: `new_file_${files.length}.txt`, type: 'File', size: '0 KB' }, ...files])} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                       New File
                     </button>
                   </div>
                   <div className="divide-y divide-white/10">
-                    {['world', 'plugins', 'config', 'logs'].map(folder => (
-                      <div key={folder} className={`px-6 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer ${themeMode === 'dark' ? '' : 'hover:bg-white/50'}`}>
+                    {files.map(file => (
+                      <div key={file.name} className={`px-6 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer ${themeMode === 'dark' ? '' : 'hover:bg-white/50'}`}>
                         <div className="flex items-center gap-3">
-                          <Folder size={20} className="text-blue-400" />
-                          <span className="font-medium">{folder}</span>
+                          {file.type === 'Directory' ? <Folder size={20} className="text-blue-400" /> : <TerminalIcon size={20} className="text-slate-400" />}
+                          <span className="font-medium">{file.name}</span>
                         </div>
-                        <span className={`text-sm ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>Directory</span>
-                      </div>
-                    ))}
-                    {['server.properties', 'eula.txt', 'spigot.yml'].map(file => (
-                      <div key={file} className={`px-6 py-3 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer ${themeMode === 'dark' ? '' : 'hover:bg-white/50'}`}>
-                        <div className="flex items-center gap-3">
-                          <TerminalIcon size={20} className="text-slate-400" />
-                          <span className="font-medium">{file}</span>
-                        </div>
-                        <span className={`text-sm ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>2 KB</span>
+                        <span className={`text-sm ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>{file.type === 'Directory' ? 'Directory' : file.size}</span>
                       </div>
                     ))}
                   </div>
@@ -1077,31 +1159,33 @@ export default function App() {
                   
                   <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <div className="flex-1 flex">
-                      <input type="text" placeholder="myserver" className={`flex-1 border border-r-0 rounded-l-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} />
+                      <input type="text" value={newSubdomain} onChange={(e) => setNewSubdomain(e.target.value)} placeholder="myserver" className={`flex-1 border border-r-0 rounded-l-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${themeMode === 'dark' ? 'bg-black/20 border-white/10 text-white' : 'bg-white/50 border-white/40 text-slate-900'}`} />
                       <div className={`px-4 py-3 border rounded-r-xl flex items-center font-medium ${themeMode === 'dark' ? 'bg-white/5 border-white/10 text-white/70' : 'bg-slate-100 border-white/40 text-slate-600'}`}>.skahost.com</div>
                     </div>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors flex items-center justify-center gap-2">
+                    <button onClick={() => { if (newSubdomain) { setSubdomains([...subdomains, { name: `${newSubdomain}.skahost.com`, target: '192.168.1.100:25565', type: 'SRV' }]); setNewSubdomain(''); } else alert('Please enter a subdomain'); }} className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors flex items-center justify-center gap-2">
                       <Globe size={18} /> Create Record
                     </button>
                   </div>
                   
                   <h4 className={`text-sm font-semibold mb-4 uppercase tracking-wider ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>Active Subdomains</h4>
                   <div className="space-y-3">
-                    <div className={`p-4 rounded-xl border flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-colors ${themeMode === 'dark' ? 'bg-black/20 border-white/10 hover:bg-white/5' : 'bg-white/50 border-white/30 hover:bg-white/80'}`}>
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-500">
-                          <Globe size={20} />
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg">play.skahost.com</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className={`w-2 h-2 rounded-full bg-emerald-500`} />
-                            <p className={`text-xs font-mono ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>SRV Record • Points to 192.168.1.100:25565</p>
+                    {subdomains.map(subdomain => (
+                      <div key={subdomain.name} className={`p-4 rounded-xl border flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-colors ${themeMode === 'dark' ? 'bg-black/20 border-white/10 hover:bg-white/5' : 'bg-white/50 border-white/30 hover:bg-white/80'}`}>
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-500">
+                            <Globe size={20} />
+                          </div>
+                          <div>
+                            <p className="font-bold text-lg">{subdomain.name}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className={`w-2 h-2 rounded-full bg-emerald-500`} />
+                              <p className={`text-xs font-mono ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>{subdomain.type} Record • Points to {subdomain.target}</p>
+                            </div>
                           </div>
                         </div>
+                        <button onClick={() => setSubdomains(subdomains.filter(s => s.name !== subdomain.name))} className="text-red-500 hover:bg-red-500/20 px-4 py-2 rounded-lg transition-colors font-medium text-sm border border-transparent hover:border-red-500/30">Delete Record</button>
                       </div>
-                      <button className="text-red-500 hover:bg-red-500/20 px-4 py-2 rounded-lg transition-colors font-medium text-sm border border-transparent hover:border-red-500/30">Delete Record</button>
-                    </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -1118,7 +1202,7 @@ export default function App() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {['1.20.4', '1.20.2', '1.19.4', '1.18.2', '1.16.5', '1.12.2'].map(version => (
-                        <button key={version} className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${themeMode === 'dark' ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-slate-200 hover:border-blue-500'}`}>
+                        <button key={version} onClick={() => alert(`Version ${version} Selected!`)} className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${themeMode === 'dark' ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-slate-200 hover:border-blue-500'}`}>
                           <span className="font-medium">{version}</span>
                           <Download size={16} className={themeMode === 'dark' ? 'text-white/40' : 'text-slate-400'} />
                         </button>
@@ -1148,7 +1232,11 @@ export default function App() {
                         <div key={egg.name} className={`p-4 rounded-xl border flex flex-col gap-2 transition-colors ${themeMode === 'dark' ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-slate-200 hover:border-purple-500'}`}>
                           <div className="flex items-center justify-between">
                             <span className="font-bold">{egg.name}</span>
-                            <button className="px-3 py-1 rounded-lg bg-purple-500 text-white text-sm font-medium hover:bg-purple-600 transition-colors">Install</button>
+                            {installedEgg === egg.name ? (
+                              <button disabled className="px-3 py-1 rounded-lg bg-emerald-500/50 text-white text-sm font-medium cursor-not-allowed">Installed</button>
+                            ) : (
+                              <button onClick={() => { setInstalledEgg(egg.name); alert(`${egg.name} Egg Installed!`); }} className="px-3 py-1 rounded-lg bg-purple-500 text-white text-sm font-medium hover:bg-purple-600 transition-colors">Install</button>
+                            )}
                           </div>
                           <span className={`text-sm ${themeMode === 'dark' ? 'text-white/50' : 'text-slate-500'}`}>{egg.desc}</span>
                         </div>
@@ -1261,13 +1349,7 @@ export default function App() {
                     <h3 className="text-lg font-bold flex items-center gap-2"><UsersIcon size={20} className="text-emerald-500"/> Player Manager (3/20)</h3>
                   </div>
                   <div className="divide-y divide-white/10">
-                    {[
-                      { name: 'Notch', ping: '12ms', rank: 'Owner' },
-                      { name: 'Jeb_', ping: '24ms', rank: 'Admin' },
-                      { name: 'Dinnerbone', ping: '45ms', rank: 'Developer' },
-                      { name: 'Steve', ping: '120ms', rank: 'Player' },
-                      { name: 'Alex', ping: '85ms', rank: 'Player' }
-                    ].map(player => (
+                    {players.map(player => (
                       <div key={player.name} className={`px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white/5 transition-colors ${themeMode === 'dark' ? '' : 'hover:bg-white/50'}`}>
                         <div className="flex items-center gap-4">
                           <img src={`https://minotar.net/avatar/${player.name}/32`} alt={player.name} className="w-8 h-8 rounded-md" />
@@ -1287,9 +1369,9 @@ export default function App() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <button className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors">OP</button>
-                          <button className="px-3 py-1.5 rounded-lg text-sm font-medium bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white transition-colors">Kick</button>
-                          <button className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors">Ban</button>
+                          <button onClick={() => { setPlayers(players.map(p => p.name === player.name ? { ...p, rank: 'Admin' } : p)); alert(`${player.name} Opped!`); }} className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors">OP</button>
+                          <button onClick={() => { setPlayers(players.filter(p => p.name !== player.name)); alert(`${player.name} Kicked!`); }} className="px-3 py-1.5 rounded-lg text-sm font-medium bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white transition-colors">Kick</button>
+                          <button onClick={() => { setPlayers(players.filter(p => p.name !== player.name)); alert(`${player.name} Banned!`); }} className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors">Ban</button>
                         </div>
                       </div>
                     ))}
@@ -1414,14 +1496,14 @@ export default function App() {
                             }`}>
                               {pack.status}
                             </span>
-                            <button className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            <button onClick={() => alert(pack.status === 'Active' ? 'Pack Disabled!' : 'Pack Enabled!')} className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                               pack.status === 'Active'
                                 ? 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white'
                                 : 'bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white'
                             }`}>
                               {pack.status === 'Active' ? 'Disable' : 'Enable'}
                             </button>
-                            <button className="text-red-500 hover:bg-red-500/20 p-1.5 rounded-lg transition-colors">
+                            <button onClick={() => alert('Pack Removed!')} className="text-red-500 hover:bg-red-500/20 p-1.5 rounded-lg transition-colors">
                               <X size={18} />
                             </button>
                           </div>
@@ -1497,7 +1579,7 @@ export default function App() {
                   <User size={24} className="text-blue-500" />
                   User Management
                 </h3>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors flex items-center gap-2">
+                <button onClick={() => setUsers([...users, { id: users.length + 1, name: 'New User', email: `user${users.length + 1}@example.com`, role: 'Standard' }])} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-colors flex items-center gap-2">
                   <Plus size={18} /> Create User
                 </button>
               </div>
@@ -1514,11 +1596,7 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[
-                      { id: 1, name: 'Admin User', email: 'admin@skahost.com', role: 'Administrator' },
-                      { id: 2, name: 'Test User', email: 'user@example.com', role: 'Standard' },
-                      { id: 3, name: 'John Doe', email: 'john@example.com', role: 'Standard' },
-                    ].map((user) => (
+                    {users.map((user) => (
                       <tr key={user.id} className={`border-b last:border-0 ${themeMode === 'dark' ? 'border-white/10 hover:bg-white/5' : 'border-slate-200 hover:bg-slate-50'}`}>
                         <td className="p-4 text-sm">{user.id}</td>
                         <td className="p-4 text-sm font-medium">{user.name}</td>
@@ -1529,8 +1607,8 @@ export default function App() {
                           </span>
                         </td>
                         <td className="p-4 text-sm text-right">
-                          <button className="text-blue-500 hover:text-blue-400 mr-3">Edit</button>
-                          <button className="text-red-500 hover:text-red-400">Delete</button>
+                          <button onClick={() => alert('Edit User!')} className="text-blue-500 hover:text-blue-400 mr-3">Edit</button>
+                          <button onClick={() => setUsers(users.filter(u => u.id !== user.id))} className="text-red-500 hover:text-red-400">Delete</button>
                         </td>
                       </tr>
                     ))}
@@ -1570,9 +1648,9 @@ function NavItem({ icon, label, active = false, onClick, themeMode }: { key?: st
   );
 }
 
-function DropdownItem({ icon, label, danger = false, themeMode }: { icon: React.ReactNode, label: string, danger?: boolean, themeMode: 'dark' | 'light' }) {
+function DropdownItem({ icon, label, danger = false, themeMode, onClick }: { icon: React.ReactNode, label: string, danger?: boolean, themeMode: 'dark' | 'light', onClick?: () => void }) {
   return (
-    <button className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+    <button onClick={onClick} className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
       danger 
         ? themeMode === 'dark' ? 'text-red-400 hover:bg-red-500/20' : 'text-red-600 hover:bg-red-50'
         : themeMode === 'dark' ? 'text-white/70 hover:bg-white/10 hover:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
@@ -1596,7 +1674,7 @@ function StatCard({ title, value, trend, alert = false, themeMode }: { title: st
   );
 }
 
-function ServerCard({ name, status, cpu, ram, node, onClick, themeMode, icon, bg }: { name: string, status: 'Online' | 'Offline' | 'Starting', cpu: string, ram: string, node: string, onClick?: () => void, themeMode: 'dark' | 'light', icon?: string, bg?: string }) {
+function ServerCard({ name, status, cpu, ram, node, onClick, themeMode, icon, bg, onStart, onRestart, onStop }: { name: string, status: 'Online' | 'Offline' | 'Starting', cpu: string, ram: string, node: string, onClick?: () => void, themeMode: 'dark' | 'light', icon?: string, bg?: string, onStart?: () => void, onRestart?: () => void, onStop?: () => void }) {
   const statusColors = {
     Online: 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]',
     Offline: 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]',
@@ -1642,13 +1720,13 @@ function ServerCard({ name, status, cpu, ram, node, onClick, themeMode, icon, bg
 
       {/* Quick Actions */}
       <div className={`flex items-center gap-2 pt-4 border-t ${themeMode === 'dark' ? 'border-white/10' : 'border-slate-200/50'}`}>
-        <button className="flex-1 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white border border-emerald-500/30 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium" onClick={(e) => e.stopPropagation()}>
+        <button className="flex-1 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white border border-emerald-500/30 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium" onClick={(e) => { e.stopPropagation(); if (onStart) onStart(); else alert('Server Started!'); }}>
           <Play size={14} /> Start
         </button>
-        <button className="flex-1 bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500/30 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium" onClick={(e) => e.stopPropagation()}>
+        <button className="flex-1 bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500/30 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium" onClick={(e) => { e.stopPropagation(); if (onRestart) onRestart(); else alert('Server Restarted!'); }}>
           <RotateCcw size={14} /> Restart
         </button>
-        <button className="flex-1 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/30 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium" onClick={(e) => e.stopPropagation()}>
+        <button className="flex-1 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/30 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium" onClick={(e) => { e.stopPropagation(); if (onStop) onStop(); else alert('Server Stopped!'); }}>
           <Square size={14} /> Stop
         </button>
       </div>
