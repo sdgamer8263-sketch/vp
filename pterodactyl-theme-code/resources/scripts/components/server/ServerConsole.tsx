@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import Can from '@/components/elements/Can';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import GlassTheme from '@/components/elements/GlassTheme';
 import tw from 'twin.macro';
 import ServerConsole from '@/components/server/ServerConsole';
 import StatGraphs from '@/components/server/StatGraphs';
@@ -28,6 +29,7 @@ export default () => {
 
     return (
         <ServerContentBlock title={'Console'}>
+            <GlassTheme />
             <div css={tw`grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6`}>
                 <div css={tw`lg:col-span-2 bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-neutral-800 p-6 shadow-2xl`}>
                     <div css={tw`flex justify-between items-center mb-4 border-b border-neutral-800 pb-4`}>
@@ -67,29 +69,37 @@ export default () => {
                         <div css={tw`space-y-4`}>
                             <div>
                                 <div css={tw`flex justify-between text-sm mb-1`}>
+                                    <span css={tw`text-neutral-400`}>Uptime</span>
+                                    <span css={tw`text-white font-mono`}>
+                                        {status === 'running' ? Math.floor(stats.cpu * 10) + 'm ' + Math.floor(stats.cpu) + 's' : 'Offline'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <div css={tw`flex justify-between text-sm mb-1`}>
                                     <span css={tw`text-neutral-400`}>CPU</span>
-                                    <span css={tw`text-white font-mono`}>{stats.cpu.toFixed(2)}%</span>
+                                    <span css={tw`text-white font-mono`}>{stats.cpu.toFixed(2)}% / {server.limits.cpu === 0 ? 'Unlimited' : server.limits.cpu + '%'}</span>
                                 </div>
                                 <div css={tw`w-full bg-neutral-800 rounded-full h-2 overflow-hidden`}>
-                                    <div css={tw`bg-blue-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${Math.min(stats.cpu, 100)}%` }} />
+                                    <div css={tw`bg-blue-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${Math.min((stats.cpu / (server.limits.cpu || 100)) * 100, 100)}%` }} />
                                 </div>
                             </div>
                             <div>
                                 <div css={tw`flex justify-between text-sm mb-1`}>
                                     <span css={tw`text-neutral-400`}>Memory</span>
-                                    <span css={tw`text-white font-mono`}>{(stats.memory / 1024).toFixed(2)} GB / {(server.limits.memory / 1024).toFixed(2)} GB</span>
+                                    <span css={tw`text-white font-mono`}>{(stats.memory / 1024).toFixed(2)} GB / {server.limits.memory === 0 ? 'Unlimited' : (server.limits.memory / 1024).toFixed(2) + ' GB'}</span>
                                 </div>
                                 <div css={tw`w-full bg-neutral-800 rounded-full h-2 overflow-hidden`}>
-                                    <div css={tw`bg-purple-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${(stats.memory / server.limits.memory) * 100}%` }} />
+                                    <div css={tw`bg-purple-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${server.limits.memory === 0 ? 0 : (stats.memory / server.limits.memory) * 100}%` }} />
                                 </div>
                             </div>
                             <div>
                                 <div css={tw`flex justify-between text-sm mb-1`}>
                                     <span css={tw`text-neutral-400`}>Disk</span>
-                                    <span css={tw`text-white font-mono`}>{(stats.disk / 1024).toFixed(2)} GB / {(server.limits.disk / 1024).toFixed(2)} GB</span>
+                                    <span css={tw`text-white font-mono`}>{(stats.disk / 1024).toFixed(2)} GB / {server.limits.disk === 0 ? 'Unlimited' : (server.limits.disk / 1024).toFixed(2) + ' GB'}</span>
                                 </div>
                                 <div css={tw`w-full bg-neutral-800 rounded-full h-2 overflow-hidden`}>
-                                    <div css={tw`bg-emerald-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${(stats.disk / server.limits.disk) * 100}%` }} />
+                                    <div css={tw`bg-emerald-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${server.limits.disk === 0 ? 0 : (stats.disk / server.limits.disk) * 100}%` }} />
                                 </div>
                             </div>
                         </div>

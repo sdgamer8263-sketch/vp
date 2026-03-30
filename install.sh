@@ -38,12 +38,25 @@ cp -r my-main/pterodactyl-theme-code/* $PANEL_DIR/
 rm -rf theme.zip my-main
 
 # Install dependencies and build
+echo "Setting up swap file to prevent out-of-memory errors during build..."
+fallocate -l 4G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=4096
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+
 echo "Installing Node.js dependencies and building assets..."
 curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 apt-get install -y nodejs
 npm install -g yarn
-yarn install
-yarn build:production
+yarn cache clean
+yarn install --network-timeout 100000
+yarn build:production || { echo "Build failed. Trying again with increased memory limit..."; NODE_OPTIONS="--max_old_space_size=4096" yarn build:production; }
+
+# Remove swap file after build
+swapoff /swapfile
+rm -f /swapfile
+sed -i '/\/swapfile/d' /etc/fstab
 
 # Clear cache and optimize
 echo "Clearing cache and optimizing..."

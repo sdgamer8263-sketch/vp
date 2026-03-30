@@ -4,6 +4,7 @@ import getServers from '@/api/getServers';
 import ServerRow from '@/components/dashboard/ServerRow';
 import Spinner from '@/components/elements/Spinner';
 import PageContentBlock from '@/components/elements/PageContentBlock';
+import GlassTheme from '@/components/elements/GlassTheme';
 import useFlash from '@/plugins/useFlash';
 import { useStoreState } from 'easy-peasy';
 import { usePersistedState } from '@/plugins/usePersistedState';
@@ -27,6 +28,7 @@ export default () => {
 
     return (
         <PageContentBlock title={'Dashboard'} showFlashKey={'dashboard'}>
+            <GlassTheme />
             <div css={tw`mb-8`}>
                 <h1 css={tw`text-3xl font-bold text-white mb-2 flex items-center gap-3`}>
                     <Activity css={tw`text-blue-500`} size={32} />
