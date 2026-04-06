@@ -7,7 +7,8 @@ import tw from 'twin.macro';
 import ServerConsole from '@/components/server/ServerConsole';
 import StatGraphs from '@/components/server/StatGraphs';
 import PowerControls from '@/components/server/PowerControls';
-import { Server as ServerIcon, Cpu, MemoryStick, HardDrive, Activity } from 'lucide-react';
+import { Server as ServerIcon, Cpu, MemoryStick, HardDrive, Activity, Globe, Package, Box, Layers, Image as ImageIcon, Settings, Puzzle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default () => {
     const [stats, setStats] = useState({ cpu: 0, memory: 0, disk: 0 });
@@ -102,6 +103,43 @@ export default () => {
                                     <div css={tw`bg-emerald-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${server.limits.disk === 0 ? 0 : (stats.disk / server.limits.disk) * 100}%` }} />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div css={tw`bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-neutral-800 p-6 shadow-2xl`}>
+                        <h3 css={tw`text-lg font-bold mb-4 text-white flex items-center gap-2`}>
+                            <Settings css={tw`text-orange-500`} size={20} />
+                            Management
+                        </h3>
+                        <div css={tw`grid grid-cols-2 gap-3`}>
+                            <Link to={`/server/${server.id}/subdomains`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-blue-500/20 hover:border-blue-500/30 hover:text-blue-400 transition-colors text-neutral-300`}>
+                                <Globe size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Subdomains</span>
+                            </Link>
+                            <Link to={`/server/${server.id}/plugins`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-purple-500/20 hover:border-purple-500/30 hover:text-purple-400 transition-colors text-neutral-300`}>
+                                <Package size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Plugins</span>
+                            </Link>
+                            <Link to={`/server/${server.id}/mods`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-orange-500/20 hover:border-orange-500/30 hover:text-orange-400 transition-colors text-neutral-300`}>
+                                <Box size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Mods</span>
+                            </Link>
+                            <Link to={`/server/${server.id}/addons`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-teal-500/20 hover:border-teal-500/30 hover:text-teal-400 transition-colors text-neutral-300`}>
+                                <Puzzle size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Addons</span>
+                            </Link>
+                            <Link to={`/server/${server.id}/versions`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-500/30 hover:text-cyan-400 transition-colors text-neutral-300`}>
+                                <Layers size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Versions</span>
+                            </Link>
+                            <Link to={`/server/${server.id}/resource-packs`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-pink-500/20 hover:border-pink-500/30 hover:text-pink-400 transition-colors text-neutral-300`}>
+                                <ImageIcon size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Resource Packs</span>
+                            </Link>
+                            <Link to={`/server/${server.id}/eggs`} css={tw`flex flex-col items-center justify-center p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-400 transition-colors text-neutral-300 col-span-2`}>
+                                <Settings size={20} css={tw`mb-1`} />
+                                <span css={tw`text-xs font-medium`}>Egg Changer</span>
+                            </Link>
                         </div>
                     </div>
                 </div>

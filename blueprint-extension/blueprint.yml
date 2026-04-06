@@ -1,0 +1,28 @@
+name: GlassTheme
+version: 1.0.0
+description: A beautiful glassmorphism theme for Pterodactyl Panel with advanced management features.
+author: YourName
+website: https://yourwebsite.com
+
+# Blueprint Configuration
+blueprint:
+  version: "1.0"
+
+# Files to copy to the panel
+files:
+  - source: public/extensions/glasstheme/style.css
+    target: public/extensions/glasstheme/style.css
+
+# Hooks to inject code into Blade templates
+hooks:
+  - target: "resources/views/layouts/master.blade.php"
+    type: "append"
+    search: "</head>"
+    replace: |
+      <link rel="stylesheet" href="/extensions/glasstheme/style.css">
+      <style>
+        body {
+          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+          background-attachment: fixed;
+        }
+      </style>

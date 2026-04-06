@@ -1,20 +1,24 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AppProvider } from './context/AppContext';
-import { Layout } from './components/Layout';
-import { Dashboard } from './pages/Dashboard';
-import { ServerConsole } from './pages/ServerConsole';
-import { Tickets } from './pages/Tickets';
-import { Admin } from './pages/Admin';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppProvider } from "./context/AppContext";
+import { Layout } from "./components/Layout";
+import { Dashboard } from "./pages/Dashboard";
+import { ServerView } from "./pages/ServerView";
+import { Tickets } from "./pages/Tickets";
+import { Admin } from "./pages/Admin";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
 
 function App() {
   return (
     <AppProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
-            <Route path="server/:id" element={<ServerConsole />} />
+            <Route path="server/:id/*" element={<ServerView />} />
             <Route path="tickets" element={<Tickets />} />
             <Route path="admin" element={<Admin />} />
           </Route>
