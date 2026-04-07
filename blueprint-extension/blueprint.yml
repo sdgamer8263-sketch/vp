@@ -1,8 +1,8 @@
 name: GlassTheme
 version: 1.0.0
 description: A beautiful glassmorphism theme for Pterodactyl Panel with advanced management features.
-author: YourName
-website: https://yourwebsite.com
+author: sdgamer8263
+website: https://github.com/sdgamer8263
 
 # Blueprint Configuration
 blueprint:
@@ -12,6 +12,8 @@ blueprint:
 files:
   - source: public/extensions/glasstheme/style.css
     target: public/extensions/glasstheme/style.css
+  - source: resources/scripts/
+    target: resources/scripts/
 
 # Hooks to inject code into Blade templates
 hooks:
@@ -26,3 +28,8 @@ hooks:
           background-attachment: fixed;
         }
       </style>
+
+# Build commands to run after copying files
+build:
+  - yarn install
+  - yarn build:production

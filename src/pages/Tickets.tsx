@@ -67,15 +67,15 @@ export const Tickets = () => {
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Support Tickets</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-2xl font-bold text-white">Support Tickets</h2>
+          <p className="text-sm text-gray-400 mt-1">
             Need help? Create a ticket and our team will assist you.
           </p>
         </div>
         {!isCreating && (
           <button
             onClick={() => setIsCreating(true)}
-            className="flex items-center space-x-2 px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-opacity hover:opacity-90"
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-opacity hover:opacity-90 border border-white/10"
             style={{ backgroundColor: theme.primary }}
           >
             <Plus size={20} />
@@ -85,13 +85,13 @@ export const Tickets = () => {
       </div>
 
       {isCreating && (
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl shadow-xl border border-white/10">
+          <h3 className="text-lg font-semibold text-white mb-4">
             Create New Ticket
           </h3>
           <form onSubmit={handleCreate} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Subject
               </label>
               <input
@@ -100,13 +100,13 @@ export const Tickets = () => {
                 onChange={(e) =>
                   setNewTicket({ ...newTicket, title: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
+                className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-shadow"
                 placeholder="Brief summary of your issue"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Description
               </label>
               <textarea
@@ -114,7 +114,7 @@ export const Tickets = () => {
                 onChange={(e) =>
                   setNewTicket({ ...newTicket, description: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow h-32 resize-none"
+                className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-shadow h-32 resize-none"
                 placeholder="Please describe your problem in detail..."
                 required
               />
@@ -123,13 +123,13 @@ export const Tickets = () => {
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-white/10 rounded-lg text-gray-300 font-medium hover:bg-white/5 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-opacity hover:opacity-90"
+                className="px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-opacity hover:opacity-90 border border-white/10"
                 style={{ backgroundColor: theme.primary }}
               >
                 Submit Ticket
@@ -141,14 +141,14 @@ export const Tickets = () => {
 
       <div className="space-y-4">
         {tickets.length === 0 ? (
-          <div className="bg-white p-12 rounded-xl shadow-sm border border-gray-200 text-center flex flex-col items-center justify-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <div className="bg-black/30 backdrop-blur-md p-12 rounded-xl shadow-xl border border-white/10 text-center flex flex-col items-center justify-center">
+            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
               <TicketIcon size={32} className="text-gray-400" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">
+            <h3 className="text-lg font-medium text-white">
               No tickets found
             </h3>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-400 mt-1">
               You haven't created any support tickets yet.
             </p>
           </div>
@@ -156,32 +156,32 @@ export const Tickets = () => {
           tickets.map((ticket) => (
             <div
               key={ticket.id}
-              className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              className="bg-black/30 backdrop-blur-md p-5 rounded-xl shadow-xl border border-white/10 hover:bg-black/40 transition-colors"
             >
               <div className="flex justify-between items-start">
                 <div className="flex items-start space-x-4">
                   <div
-                    className={`p-3 rounded-lg ${ticket.status === "open" ? "bg-blue-50" : "bg-gray-50"}`}
+                    className={`p-3 rounded-lg ${ticket.status === "open" ? "bg-blue-500/20 border border-blue-500/30" : "bg-white/5 border border-white/10"}`}
                   >
                     {ticket.status === "open" ? (
-                      <MessageSquare size={24} className="text-blue-500" />
+                      <MessageSquare size={24} className="text-blue-400" />
                     ) : (
                       <CheckCircle size={24} className="text-gray-400" />
                     )}
                   </div>
                   <div>
                     <div className="flex items-center space-x-3">
-                      <h3 className="text-lg font-semibold text-gray-800">
+                      <h3 className="text-lg font-semibold text-white">
                         {ticket.title}
                       </h3>
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${ticket.status === "open" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}
+                        className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${ticket.status === "open" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-white/10 text-gray-300 border border-white/10"}`}
                       >
                         {ticket.status.toUpperCase()}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-500 mt-1 flex items-center">
-                      <span className="font-medium text-gray-700 mr-2">
+                    <p className="text-sm text-gray-400 mt-1 flex items-center">
+                      <span className="font-medium text-gray-300 mr-2">
                         #{ticket.id}
                       </span>
                       <Clock size={14} className="mr-1" /> {ticket.createdAt}
@@ -193,15 +193,15 @@ export const Tickets = () => {
                 {ticket.status === "open" && role === "Admin" && (
                   <button
                     onClick={() => closeTicket(ticket.id)}
-                    className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="px-3 py-1.5 border border-white/10 rounded-lg text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors"
                   >
                     Close Ticket
                   </button>
                 )}
               </div>
               <div className="mt-4 pl-16">
-                <div className="text-gray-600 bg-gray-50 p-4 rounded-lg border border-gray-100 mb-4">
-                  <div className="font-medium text-gray-800 mb-2">
+                <div className="text-gray-300 bg-black/50 p-4 rounded-lg border border-white/10 mb-4">
+                  <div className="font-medium text-gray-200 mb-2">
                     Original Issue:
                   </div>
                   {ticket.description}
@@ -212,11 +212,11 @@ export const Tickets = () => {
                     {ticket.replies.map((reply: any) => (
                       <div
                         key={reply.id}
-                        className={`p-4 rounded-lg border ${reply.isAdmin ? "bg-blue-50 border-blue-100" : "bg-gray-50 border-gray-100"}`}
+                        className={`p-4 rounded-lg border ${reply.isAdmin ? "bg-blue-500/10 border-blue-500/20" : "bg-white/5 border-white/10"}`}
                       >
                         <div className="flex justify-between items-center mb-1">
                           <span
-                            className={`font-medium ${reply.isAdmin ? "text-blue-800" : "text-gray-800"}`}
+                            className={`font-medium ${reply.isAdmin ? "text-blue-400" : "text-gray-300"}`}
                           >
                             {reply.author}
                           </span>
@@ -224,7 +224,7 @@ export const Tickets = () => {
                             {reply.createdAt}
                           </span>
                         </div>
-                        <p className="text-gray-700">{reply.content}</p>
+                        <p className="text-gray-300">{reply.content}</p>
                       </div>
                     ))}
                   </div>
@@ -242,14 +242,14 @@ export const Tickets = () => {
                         })
                       }
                       placeholder="Type your reply..."
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                      className="flex-1 px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 outline-none"
                       onKeyPress={(e) =>
                         e.key === "Enter" && addReply(ticket.id)
                       }
                     />
                     <button
                       onClick={() => addReply(ticket.id)}
-                      className="px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-opacity hover:opacity-90 flex items-center gap-2"
+                      className="px-4 py-2 rounded-lg text-white font-medium shadow-sm transition-opacity hover:opacity-90 flex items-center gap-2 border border-white/10"
                       style={{ backgroundColor: theme.primary }}
                     >
                       <Send size={16} /> Reply

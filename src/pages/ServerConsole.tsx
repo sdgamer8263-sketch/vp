@@ -86,24 +86,24 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
           <button 
             onClick={handleStart}
             disabled={server.status === "running"}
-            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/10 rounded-lg text-white font-medium hover:bg-white/20 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Play size={18} className="text-green-500" />
+            <Play size={18} className="text-green-400" />
             <span>Start</span>
           </button>
           <button 
             onClick={handleRestart}
-            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm"
+            className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/10 rounded-lg text-white font-medium hover:bg-white/20 transition-all shadow-sm"
           >
-            <RefreshCw size={18} className="text-blue-500" />
+            <RefreshCw size={18} className="text-blue-400" />
             <span>Restart</span>
           </button>
           <button 
             onClick={handleStop}
             disabled={server.status === "offline"}
-            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/10 rounded-lg text-white font-medium hover:bg-red-500/20 hover:border-red-500/30 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Square size={18} className="text-red-500" />
+            <Square size={18} className="text-red-400" />
             <span>Stop</span>
           </button>
         </div>
@@ -111,10 +111,10 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3 space-y-4">
-          <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg border border-gray-800 flex flex-col h-[500px]">
-            <div className="bg-gray-800 px-4 py-2 flex items-center space-x-2 border-b border-gray-700">
+          <div className="bg-black/40 backdrop-blur-md rounded-xl overflow-hidden shadow-xl border border-white/10 flex flex-col h-[500px]">
+            <div className="bg-white/5 px-4 py-3 flex items-center space-x-2 border-b border-white/10">
               <Terminal size={16} className="text-gray-400" />
-              <span className="text-sm font-medium text-gray-300">Console</span>
+              <span className="text-sm font-medium text-gray-200">Console</span>
             </div>
             <div
               ref={consoleRef}
@@ -128,10 +128,10 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
             </div>
             <form
               onSubmit={handleCommand}
-              className="p-3 bg-gray-800 border-t border-gray-700"
+              className="p-3 bg-white/5 border-t border-white/10"
             >
               <div className="relative flex items-center">
-                <span className="absolute left-3 text-gray-500 font-mono">
+                <span className="absolute left-3 text-gray-400 font-mono">
                   {">"}
                 </span>
                 <input
@@ -139,7 +139,7 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Type a command..."
-                  className="w-full bg-gray-900 text-gray-100 placeholder-gray-600 rounded-lg pl-8 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono text-sm"
+                  className="w-full bg-black/50 text-gray-100 placeholder-gray-500 border border-white/10 rounded-lg pl-8 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono text-sm transition-all"
                   disabled={server.status !== "running"}
                 />
               </div>
@@ -148,23 +148,23 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-4">
+          <div className="bg-black/30 backdrop-blur-md rounded-xl shadow-xl border border-white/10 p-5">
+            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
               Resource Usage
             </h3>
             <div className="space-y-5">
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="flex items-center text-gray-600 font-medium whitespace-nowrap">
-                    <Cpu size={16} className="mr-2 text-blue-500" /> CPU
+                  <span className="flex items-center text-gray-400 font-medium whitespace-nowrap">
+                    <Cpu size={16} className="mr-2 text-blue-400" /> CPU
                   </span>
-                  <span className="font-mono text-gray-800 whitespace-nowrap ml-2">
+                  <span className="font-mono text-gray-200 whitespace-nowrap ml-2">
                     {server.cpu.used}% / {server.cpu.total}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-black/50 rounded-full h-2 border border-white/5">
                   <div
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                    className="bg-blue-400 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(96,165,250,0.5)]"
                     style={{
                       width: `${(server.cpu.used / server.cpu.total) * 100}%`,
                     }}
@@ -174,17 +174,17 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="flex items-center text-gray-600 font-medium whitespace-nowrap">
-                    <Activity size={16} className="mr-2 text-green-500" /> RAM
+                  <span className="flex items-center text-gray-400 font-medium whitespace-nowrap">
+                    <Activity size={16} className="mr-2 text-green-400" /> RAM
                   </span>
-                  <span className="font-mono text-gray-800 whitespace-nowrap ml-2">
+                  <span className="font-mono text-gray-200 whitespace-nowrap ml-2">
                     {(server.ram.used / 1024).toFixed(2)} GB /{" "}
                     {(server.ram.total / 1024).toFixed(2)} GB
                   </span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-black/50 rounded-full h-2 border border-white/5">
                   <div
-                    className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                    className="bg-green-400 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(74,222,128,0.5)]"
                     style={{
                       width: `${(server.ram.used / server.ram.total) * 100}%`,
                     }}
@@ -194,18 +194,18 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="flex items-center text-gray-600 font-medium whitespace-nowrap">
-                    <HardDrive size={16} className="mr-2 text-purple-500" />{" "}
+                  <span className="flex items-center text-gray-400 font-medium whitespace-nowrap">
+                    <HardDrive size={16} className="mr-2 text-purple-400" />{" "}
                     Disk
                   </span>
-                  <span className="font-mono text-gray-800 whitespace-nowrap ml-2">
+                  <span className="font-mono text-gray-200 whitespace-nowrap ml-2">
                     {(server.disk.used / 1024).toFixed(2)} GB /{" "}
                     {(server.disk.total / 1024).toFixed(2)} GB
                   </span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-black/50 rounded-full h-2 border border-white/5">
                   <div
-                    className="bg-purple-500 h-2 rounded-full transition-all duration-500"
+                    className="bg-purple-400 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(192,132,252,0.5)]"
                     style={{
                       width: `${(server.disk.used / server.disk.total) * 100}%`,
                     }}
@@ -215,32 +215,32 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-4">
+          <div className="bg-black/30 backdrop-blur-md rounded-xl shadow-xl border border-white/10 p-5">
+            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
               Server Info
             </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-gray-500 flex items-center whitespace-nowrap">
+                <span className="text-sm text-gray-400 flex items-center whitespace-nowrap">
                   <Clock size={16} className="mr-2" /> Uptime
                 </span>
-                <span className="text-sm font-medium text-gray-800 whitespace-nowrap text-right">
+                <span className="text-sm font-medium text-gray-200 whitespace-nowrap text-right">
                   {server.uptime}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-gray-500 flex items-center whitespace-nowrap">
+                <span className="text-sm text-gray-400 flex items-center whitespace-nowrap">
                   <Terminal size={16} className="mr-2" /> Node
                 </span>
-                <span className="text-sm font-medium text-gray-800 whitespace-nowrap text-right">
+                <span className="text-sm font-medium text-gray-200 whitespace-nowrap text-right">
                   Node-01
                 </span>
               </div>
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-gray-500 flex items-center whitespace-nowrap">
+                <span className="text-sm text-gray-400 flex items-center whitespace-nowrap">
                   <HardDrive size={16} className="mr-2" /> IP Address
                 </span>
-                <span className="text-sm font-mono text-gray-800 whitespace-nowrap text-right">
+                <span className="text-sm font-mono text-gray-200 whitespace-nowrap text-right">
                   192.168.1.100:25565
                 </span>
               </div>

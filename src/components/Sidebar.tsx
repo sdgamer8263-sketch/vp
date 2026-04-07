@@ -21,38 +21,31 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isServerRelatedPage =
-    location.pathname.startsWith("/server/") ||
-    [
-      "/subdomains",
-      "/plugins",
-      "/mods",
-      "/addons",
-      "/versions",
-      "/resource-packs",
-      "/eggs",
-    ].includes(location.pathname);
+  const serverIdMatch = location.pathname.match(/\/server\/([^\/]+)/);
+  const serverId = serverIdMatch ? serverIdMatch[1] : null;
+
+  const isServerRelatedPage = !!serverId;
 
   const navItems = [
     { name: "Servers", path: "/", icon: <Server size={20} /> },
     { name: "Tickets", path: "/tickets", icon: <Ticket size={20} /> },
   ];
 
-  if (isServerRelatedPage) {
+  if (isServerRelatedPage && serverId) {
     navItems.splice(
       1,
       0,
-      { name: "Subdomains", path: "/subdomains", icon: <Globe size={20} /> },
-      { name: "Plugins", path: "/plugins", icon: <Package size={20} /> },
-      { name: "Mods", path: "/mods", icon: <Box size={20} /> },
-      { name: "Addons", path: "/addons", icon: <Puzzle size={20} /> },
-      { name: "Versions", path: "/versions", icon: <Layers size={20} /> },
+      { name: "Subdomains", path: `/server/${serverId}/subdomains`, icon: <Globe size={20} /> },
+      { name: "Plugins", path: `/server/${serverId}/plugins`, icon: <Package size={20} /> },
+      { name: "Mods", path: `/server/${serverId}/mods`, icon: <Box size={20} /> },
+      { name: "Addons", path: `/server/${serverId}/addons`, icon: <Puzzle size={20} /> },
+      { name: "Versions", path: `/server/${serverId}/versions`, icon: <Layers size={20} /> },
       {
         name: "Resource Packs",
-        path: "/resource-packs",
+        path: `/server/${serverId}/resource-packs`,
         icon: <ImageIcon size={20} />,
       },
-      { name: "Egg Changer", path: "/eggs", icon: <Settings size={20} /> }
+      { name: "Egg Changer", path: `/server/${serverId}/eggs`, icon: <Settings size={20} /> }
     );
   }
 

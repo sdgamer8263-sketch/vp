@@ -26,17 +26,17 @@ export const ServerNav = ({ serverId }: { serverId: string }) => {
   ];
 
   return (
-    <div className="flex space-x-1 overflow-x-auto pb-2 mb-6 border-b border-gray-200 hide-scrollbar">
+    <div className="flex space-x-2 overflow-x-auto pb-2 mb-6 border-b border-white/10 hide-scrollbar">
       {navs.map((nav) => (
         <NavLink
           key={nav.name}
           to={nav.path}
           end={nav.path === `/server/${serverId}`}
           className={({ isActive }) =>
-            `flex items-center space-x-2 px-4 py-2 rounded-t-lg font-medium text-sm whitespace-nowrap transition-colors ${
+            `flex items-center space-x-2 px-4 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
               isActive
-                ? "bg-white text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-500 hover:text-gray-800 hover:bg-gray-50"
+                ? "bg-white/20 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.1)] border border-white/20"
+                : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
             }`
           }
         >

@@ -38,7 +38,10 @@ export const Topbar = () => {
         )}
 
         <div className="flex items-center space-x-4 border-l border-white/10 pl-6">
-          <button className="text-gray-300 hover:text-white transition-colors relative">
+          <button 
+            onClick={() => alert("No new notifications")}
+            className="text-gray-300 hover:text-white transition-colors relative"
+          >
             <Bell size={20} />
             <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>

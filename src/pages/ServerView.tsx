@@ -11,6 +11,14 @@ import { AddonInstaller } from "./AddonInstaller";
 import { VersionChanger } from "./VersionChanger";
 import { ResourcePackManager } from "./ResourcePackManager";
 import { EggChanger } from "./EggChanger";
+import { FileManager } from "./FileManager";
+import { Databases } from "./Databases";
+import { Schedules } from "./Schedules";
+import { Users } from "./Users";
+import { Backups } from "./Backups";
+import { Network } from "./Network";
+import { Startup } from "./Startup";
+import { Settings } from "./Settings";
 
 export const ServerView = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,95 +35,39 @@ export const ServerView = () => {
       <div className="flex items-center space-x-4">
         <Link
           to="/"
-          className="p-2 bg-white rounded-lg border border-gray-200 text-gray-500 hover:text-gray-800 transition-colors"
+          className="p-2 bg-white/10 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
         >
           <ArrowLeft size={20} />
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+          <h2 className="text-2xl font-bold text-white flex items-center">
             {server.name}
             <span
               className={`ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                 server.status === "running"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                  : "bg-red-500/20 text-red-400 border border-red-500/30"
               }`}
             >
               {server.status.toUpperCase()}
             </span>
           </h2>
-          <p className="text-sm text-gray-500">{server.id}</p>
+          <p className="text-sm text-gray-400">{server.id}</p>
         </div>
       </div>
 
       <ServerNav serverId={server.id} />
 
       <Routes>
-        <Route index element={<ServerConsole />} />
-        <Route
-          path="files"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              File Manager (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="databases"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Databases (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="schedules"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Schedules (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="users"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Users (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="backups"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Backups (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="network"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Network (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="startup"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Startup (Coming Soon)
-            </div>
-          }
-        />
-        <Route
-          path="settings"
-          element={
-            <div className="p-8 bg-white rounded-xl border border-gray-200 text-center text-gray-500">
-              Settings (Coming Soon)
-            </div>
-          }
-        />
+        <Route index element={<ServerConsole server={server} />} />
+        <Route path="files" element={<FileManager />} />
+        <Route path="databases" element={<Databases />} />
+        <Route path="schedules" element={<Schedules />} />
+        <Route path="users" element={<Users />} />
+        <Route path="backups" element={<Backups />} />
+        <Route path="network" element={<Network />} />
+        <Route path="startup" element={<Startup />} />
+        <Route path="settings" element={<Settings />} />
         
         {/* Custom Theme Routes */}
         <Route path="subdomains" element={<SubdomainManager />} />
