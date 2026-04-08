@@ -26,9 +26,10 @@ glasstheme/
 1. **Prepare the files**: Copy all the contents of the `src` folder from this project into the `resources/scripts/` folder of your extension directory.
 2. **Package the extension**: Compress the `glasstheme` folder into a `.zip` file, and rename the extension to `.blueprint` (e.g., `glasstheme.blueprint`).
 3. **Upload to Pterodactyl**: Upload the `glasstheme.blueprint` file to your Pterodactyl panel's root directory (usually `/var/www/pterodactyl`).
-4. **Run the Blueprint build command**:
+4. **Install the Extension**:
+   Run the following command to automatically install and setup the theme:
    ```bash
-   blueprint -b
+   blueprint -install glasstheme
    ```
 5. **Wait for compilation**: Blueprint will automatically copy the files, inject the CSS into the Blade templates, and run `yarn build:production` to compile the React frontend.
 
@@ -37,7 +38,8 @@ glasstheme/
 - **Glassmorphism UI**: A sleek, modern design applied to all panel components.
 - **Custom Pages**: Subdomain Manager, Plugin/Mod/Addon Installers, Version Changer, Resource Pack Manager, and Egg Changer.
 - **Conditional Sidebar**: Management links only appear when viewing a specific server.
-- **Admin Panel**: Styled admin settings and ticket system.
+- **Admin Panel**: Styled admin settings and ticket system with Admin/User roles.
+- **Custom Branding**: Set custom background images, logos, and favicons directly from the Admin Settings.
 
 ## Note on React Modifications
 

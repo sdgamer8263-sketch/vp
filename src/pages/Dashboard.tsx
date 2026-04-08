@@ -10,12 +10,19 @@ import {
   RefreshCw,
   TerminalSquare,
   X,
+  Settings,
+  Users,
+  Shield,
+  Clock,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
-  const { servers, theme, updateServerStatus } = useAppContext();
+  const { servers, theme, updateServerStatus, role, viewMode, users, currentUser, setServers } = useAppContext();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newServerName, setNewServerName] = useState("");
+  const [newServerSoftware, setNewServerSoftware] = useState<any>("Paper");
+  const [newServerSuspendDate, setNewServerSuspendDate] = useState("");
 
   const handleStart = (id: string) => {
     updateServerStatus(id, "running");
@@ -30,17 +37,60 @@ export const Dashboard = () => {
     setTimeout(() => updateServerStatus(id, "running"), 2000);
   };
 
+  const handleCreateServer = () => {
+    if (!newServerName) return;
+    
+    const newServer = {
+      id: `srv-${Date.now()}`,
+      name: newServerName,
+      ownerId: currentUser.id,
+      software: newServerSoftware,
+      status: "offline" as const,
+      cpu: { used: 0, total: 100 },
+      ram: { used: 0, total: 2048 },
+      disk: { used: 0, total: 20000 },
+      uptime: "0m",
+      autoSuspendDate: newServerSuspendDate || undefined,
+    };
+    
+    setServers([...servers, newServer]);
+    setShowCreateModal(false);
+    setNewServerName("");
+    setNewServerSuspendDate("");
+  };
+
+  // Filter servers: Admin sees all, User sees only theirs
+  const visibleServers = role === "Admin" ? servers : servers.filter(s => s.ownerId === currentUser.id);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">Your Servers</h2>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 rounded-lg text-white font-medium shadow-lg transition-all hover:opacity-90 border border-white/10"
-          style={{ backgroundColor: theme.primary }}
-        >
-          Create Server
-        </button>
+        <div>
+          <h2 className="text-2xl font-bold text-white">Your Servers</h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Total Users: {users.length}
+          </p>
+        </div>
+        <div className="flex space-x-3">
+          {role === "Admin" && (
+            <>
+              <a
+                href="/admin" // Simulated link to actual pterodactyl admin
+                className="px-4 py-2 rounded-lg text-white font-medium shadow-lg transition-all hover:opacity-90 border border-white/10 flex items-center space-x-2 bg-red-500/20 hover:bg-red-500/30 text-red-400"
+              >
+                <Shield size={18} />
+                <span>Pterodactyl Admin</span>
+              </a>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2 rounded-lg text-white font-medium shadow-lg transition-all hover:opacity-90 border border-white/10"
+                style={{ backgroundColor: theme.primary }}
+              >
+                Create Server
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {showCreateModal && (
@@ -62,6 +112,8 @@ export const Dashboard = () => {
                 </label>
                 <input
                   type="text"
+                  value={newServerName}
+                  onChange={(e) => setNewServerName(e.target.value)}
                   placeholder="My New Server"
                   className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none"
                 />
@@ -70,12 +122,34 @@ export const Dashboard = () => {
                 <label className="block text-sm font-medium text-gray-300 mb-1">
                   Software
                 </label>
-                <select className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none">
-                  <option>Minecraft: Java Edition (Paper)</option>
-                  <option>Minecraft: Bedrock Edition</option>
-                  <option>Node.js App</option>
-                  <option>Python Bot</option>
+                <select 
+                  value={newServerSoftware}
+                  onChange={(e) => setNewServerSoftware(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none"
+                >
+                  <option value="Paper">Minecraft: Java Edition (Paper)</option>
+                  <option value="Fabric">Minecraft: Java Edition (Fabric)</option>
+                  <option value="Forge">Minecraft: Java Edition (Forge)</option>
+                  <option value="Vanilla">Minecraft: Java Edition (Vanilla)</option>
+                  <option value="Bedrock">Minecraft: Bedrock Edition</option>
+                  <option value="Node.js">Node.js App</option>
+                  <option value="Python">Python Bot</option>
+                  <option value="CS:GO">CS:GO</option>
                 </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Auto Suspension Date (Optional)
+                </label>
+                <input
+                  type="datetime-local"
+                  value={newServerSuspendDate}
+                  onChange={(e) => setNewServerSuspendDate(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Server will be automatically suspended at this time.
+                </p>
               </div>
               <div className="pt-4 flex justify-end space-x-3">
                 <button
@@ -85,10 +159,7 @@ export const Dashboard = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    alert("Server creation is disabled in this demo.");
-                    setShowCreateModal(false);
-                  }}
+                  onClick={handleCreateServer}
                   className="px-4 py-2 rounded-lg text-white font-medium shadow-lg transition-all hover:opacity-90"
                   style={{ backgroundColor: theme.primary }}
                 >
@@ -101,7 +172,7 @@ export const Dashboard = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {servers.map((server) => (
+        {visibleServers.map((server) => (
           <div
             key={server.id}
             className="bg-black/30 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden hover:border-white/20 transition-all"
@@ -111,9 +182,15 @@ export const Dashboard = () => {
                 <div
                   className={`w-3 h-3 rounded-full shadow-[0_0_10px_currentColor] ${server.status === "running" ? "bg-green-400 text-green-400" : server.status === "suspended" ? "bg-red-400 text-red-400" : "bg-gray-400 text-gray-400"}`}
                 ></div>
-                <h3 className="font-semibold text-white truncate">
-                  {server.name}
-                </h3>
+                <div>
+                  <h3 className="font-semibold text-white truncate">
+                    {server.name}
+                  </h3>
+                  <div className="flex items-center text-xs text-gray-400 mt-0.5">
+                    <Settings size={12} className="mr-1" />
+                    {server.software}
+                  </div>
+                </div>
               </div>
               <Link
                 to={`/server/${server.id}`}
@@ -122,6 +199,13 @@ export const Dashboard = () => {
                 <TerminalSquare size={20} />
               </Link>
             </div>
+
+            {server.autoSuspendDate && (
+              <div className="bg-yellow-500/10 border-b border-yellow-500/20 px-5 py-2 flex items-center text-xs text-yellow-400">
+                <Clock size={14} className="mr-2" />
+                Auto-suspends on: {new Date(server.autoSuspendDate).toLocaleString()}
+              </div>
+            )}
 
             <div className="p-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -136,7 +220,7 @@ export const Dashboard = () => {
                     <div
                       className="bg-blue-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.5)]"
                       style={{
-                        width: `${(server.cpu.used / server.cpu.total) * 100}%`,
+                         width: `${(server.cpu.used / server.cpu.total) * 100}%`,
                       }}
                     ></div>
                   </div>
@@ -216,6 +300,57 @@ export const Dashboard = () => {
           </div>
         ))}
       </div>
+
+      {/* Users List Section */}
+      {role === "Admin" && (
+        <div className="mt-12">
+          <div className="flex items-center space-x-3 mb-6">
+            <Users size={24} className="text-white" />
+            <h2 className="text-2xl font-bold text-white">Users</h2>
+          </div>
+          <div className="bg-black/30 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="px-6 py-4 font-semibold text-gray-300">Username</th>
+                    <th className="px-6 py-4 font-semibold text-gray-300">Email</th>
+                    <th className="px-6 py-4 font-semibold text-gray-300">Role</th>
+                    <th className="px-6 py-4 font-semibold text-gray-300">Joined</th>
+                    <th className="px-6 py-4 font-semibold text-gray-300 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {users.map((user) => (
+                    <tr key={user.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 text-white font-medium flex items-center space-x-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                          {user.username.charAt(0).toUpperCase()}
+                        </div>
+                        <span>{user.username}</span>
+                      </td>
+                      <td className="px-6 py-4 text-gray-400">{user.email}</td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                          user.role === "Admin" ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                        }`}>
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-gray-400">{user.createdAt}</td>
+                      <td className="px-6 py-4 text-right">
+                        <button className="text-blue-400 hover:text-blue-300 transition-colors text-xs font-medium">
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

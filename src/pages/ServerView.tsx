@@ -1,10 +1,9 @@
 import React from "react";
 import { useParams, Routes, Route, Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { ServerConsole } from "./ServerConsole";
 import { ServerNav } from "../components/ServerNav";
-import { SubdomainManager } from "./SubdomainManager";
 import { PluginInstaller } from "./PluginInstaller";
 import { ModInstaller } from "./ModInstaller";
 import { AddonInstaller } from "./AddonInstaller";
@@ -19,6 +18,8 @@ import { Backups } from "./Backups";
 import { Network } from "./Network";
 import { Startup } from "./Startup";
 import { Settings } from "./Settings";
+import { Players } from "./Players";
+import { ServerManager } from "./ServerManager";
 
 export const ServerView = () => {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +53,15 @@ export const ServerView = () => {
               {server.status.toUpperCase()}
             </span>
           </h2>
-          <p className="text-sm text-gray-400">{server.id}</p>
+          <div className="flex items-center space-x-3 mt-1">
+            <p className="text-sm text-gray-400">{server.id}</p>
+            {server.autoSuspendDate && (
+              <span className="flex items-center text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">
+                <Clock size={12} className="mr-1" />
+                Auto-suspends: {new Date(server.autoSuspendDate).toLocaleString()}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -70,7 +79,8 @@ export const ServerView = () => {
         <Route path="settings" element={<Settings />} />
         
         {/* Custom Theme Routes */}
-        <Route path="subdomains" element={<SubdomainManager />} />
+        <Route path="players" element={<Players />} />
+        <Route path="manager" element={<ServerManager />} />
         <Route path="plugins" element={<PluginInstaller />} />
         <Route path="mods" element={<ModInstaller />} />
         <Route path="addons" element={<AddonInstaller />} />

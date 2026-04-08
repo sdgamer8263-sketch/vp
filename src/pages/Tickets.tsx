@@ -7,10 +7,12 @@ import {
   Clock,
   CheckCircle,
   Send,
+  Shield,
+  User
 } from "lucide-react";
 
 export const Tickets = () => {
-  const { tickets, setTickets, theme, role } = useAppContext();
+  const { tickets, setTickets, theme, role, currentUser } = useAppContext();
   const [isCreating, setIsCreating] = useState(false);
   const [newTicket, setNewTicket] = useState({ title: "", description: "" });
   const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
@@ -25,7 +27,9 @@ export const Tickets = () => {
       description: newTicket.description,
       status: "open" as const,
       createdAt: new Date().toISOString().split("T")[0],
-      createdBy: role === "Admin" ? "Admin User" : "Standard User",
+      createdBy: currentUser.username,
+      creatorId: currentUser.id,
+      isAdminCreator: role === "Admin",
       replies: [],
     };
 
@@ -45,7 +49,7 @@ export const Tickets = () => {
 
     const newReply = {
       id: Math.random().toString(),
-      author: role === "Admin" ? "Admin User" : "Standard User",
+      author: currentUser.username,
       content: replyText[id],
       createdAt: new Date().toLocaleString(),
       isAdmin: role === "Admin",
@@ -62,6 +66,8 @@ export const Tickets = () => {
 
     setReplyText({ ...replyText, [id]: "" });
   };
+
+  const visibleTickets = role === "Admin" ? tickets : tickets.filter(t => t.creatorId === currentUser.id);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -140,7 +146,7 @@ export const Tickets = () => {
       )}
 
       <div className="space-y-4">
-        {tickets.length === 0 ? (
+        {visibleTickets.length === 0 ? (
           <div className="bg-black/30 backdrop-blur-md p-12 rounded-xl shadow-xl border border-white/10 text-center flex flex-col items-center justify-center">
             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
               <TicketIcon size={32} className="text-gray-400" />
@@ -153,7 +159,7 @@ export const Tickets = () => {
             </p>
           </div>
         ) : (
-          tickets.map((ticket) => (
+          visibleTickets.map((ticket) => (
             <div
               key={ticket.id}
               className="bg-black/30 backdrop-blur-md p-5 rounded-xl shadow-xl border border-white/10 hover:bg-black/40 transition-colors"
@@ -187,6 +193,15 @@ export const Tickets = () => {
                       <Clock size={14} className="mr-1" /> {ticket.createdAt}
                       <span className="mx-2">•</span>
                       By {ticket.createdBy}
+                      {ticket.isAdminCreator ? (
+                        <span className="ml-2 flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30">
+                          <Shield size={10} /> Admin
+                        </span>
+                      ) : (
+                        <span className="ml-2 flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                          <User size={10} /> User
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -212,14 +227,25 @@ export const Tickets = () => {
                     {ticket.replies.map((reply: any) => (
                       <div
                         key={reply.id}
-                        className={`p-4 rounded-lg border ${reply.isAdmin ? "bg-blue-500/10 border-blue-500/20" : "bg-white/5 border-white/10"}`}
+                        className={`p-4 rounded-lg border ${reply.isAdmin ? "bg-red-500/10 border-red-500/20" : "bg-blue-500/10 border-blue-500/20"}`}
                       >
-                        <div className="flex justify-between items-center mb-1">
-                          <span
-                            className={`font-medium ${reply.isAdmin ? "text-blue-400" : "text-gray-300"}`}
-                          >
-                            {reply.author}
-                          </span>
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`font-medium ${reply.isAdmin ? "text-red-400" : "text-blue-400"}`}
+                            >
+                              {reply.author}
+                            </span>
+                            {reply.isAdmin ? (
+                              <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30">
+                                <Shield size={10} /> Admin
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                <User size={10} /> User
+                              </span>
+                            )}
+                          </div>
                           <span className="text-xs text-gray-500">
                             {reply.createdAt}
                           </span>

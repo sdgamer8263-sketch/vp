@@ -10,6 +10,7 @@ import {
   HardDrive,
   Activity,
   Clock,
+  Calendar
 } from "lucide-react";
 
 export const ServerConsole = ({ server }: { server?: Server }) => {
@@ -244,6 +245,16 @@ export const ServerConsole = ({ server }: { server?: Server }) => {
                   192.168.1.100:25565
                 </span>
               </div>
+              {server.autoSuspendDate && (
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-sm text-gray-400 flex items-center whitespace-nowrap">
+                    <Calendar size={16} className="mr-2" /> Auto Suspend
+                  </span>
+                  <span className="text-sm font-medium text-yellow-400 whitespace-nowrap text-right">
+                    {new Date(server.autoSuspendDate).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

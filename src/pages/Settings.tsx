@@ -23,7 +23,7 @@ export const Settings = () => {
             <SettingsIcon className="text-gray-400" size={28} />
             Settings
           </h2>
-          <p className="text-sm text-gray-400 mt-1">Manage server settings, SFTP details, and reinstall.</p>
+          <p className="text-sm text-gray-400 mt-1">Manage server settings and SFTP details.</p>
         </div>
       </div>
 
@@ -82,39 +82,6 @@ export const Settings = () => {
             <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg text-white text-sm font-medium transition-colors">
               Launch SFTP
             </button>
-          </div>
-        </div>
-
-        <div className="bg-black/30 backdrop-blur-md rounded-xl border border-white/10 p-6 shadow-xl space-y-4 md:col-span-2">
-          <h3 className="text-lg font-semibold text-red-400">Danger Zone</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="border border-red-500/30 bg-red-500/5 rounded-lg p-4 flex flex-col justify-between">
-              <div>
-                <h4 className="font-medium text-white mb-1">Reinstall Server</h4>
-                <p className="text-sm text-gray-400 mb-4">Reinstalling your server will stop it, and then re-run the installation script that initially set it up.</p>
-              </div>
-              <button 
-                onClick={handleReinstall}
-                disabled={isReinstalling}
-                className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg text-white text-sm font-medium transition-all ${
-                  isReinstalling
-                    ? "bg-gray-600 border border-gray-500/50 cursor-not-allowed"
-                    : "bg-red-600/80 hover:bg-red-500 border border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.3)]"
-                }`}
-              >
-                <RefreshCw size={16} className={isReinstalling ? "animate-spin" : ""} /> 
-                {isReinstalling ? "Reinstalling..." : "Reinstall Server"}
-              </button>
-            </div>
-            <div className="border border-red-500/30 bg-red-500/5 rounded-lg p-4 flex flex-col justify-between">
-              <div>
-                <h4 className="font-medium text-white mb-1">Delete Server</h4>
-                <p className="text-sm text-gray-400 mb-4">This will permanently delete the server and all of its data. This action cannot be undone.</p>
-              </div>
-              <button className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-red-600/80 hover:bg-red-500 border border-red-500/50 rounded-lg text-white text-sm font-medium transition-colors shadow-[0_0_10px_rgba(239,68,68,0.3)]">
-                <Trash2 size={16} /> Delete Server
-              </button>
-            </div>
           </div>
         </div>
       </div>

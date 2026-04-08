@@ -10,6 +10,8 @@ import {
   Network,
   PlayCircle,
   Settings as SettingsIcon,
+  Users as PlayersIcon,
+  Server as ManagerIcon
 } from "lucide-react";
 
 export const ServerNav = ({ serverId }: { serverId: string }) => {
@@ -23,6 +25,8 @@ export const ServerNav = ({ serverId }: { serverId: string }) => {
     { name: "Network", path: `/server/${serverId}/network`, icon: <Network size={18} /> },
     { name: "Startup", path: `/server/${serverId}/startup`, icon: <PlayCircle size={18} /> },
     { name: "Settings", path: `/server/${serverId}/settings`, icon: <SettingsIcon size={18} /> },
+    { name: "Players", path: `/server/${serverId}/players`, icon: <PlayersIcon size={18} /> },
+    { name: "Manager", path: `/server/${serverId}/manager`, icon: <ManagerIcon size={18} /> },
   ];
 
   return (
