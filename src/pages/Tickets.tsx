@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const Tickets = () => {
-  const { tickets, setTickets, theme, role, currentUser } = useAppContext();
+  const { tickets, setTickets, theme, role, viewMode, currentUser } = useAppContext();
   const [isCreating, setIsCreating] = useState(false);
   const [newTicket, setNewTicket] = useState({ title: "", description: "" });
   const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
@@ -29,7 +29,7 @@ export const Tickets = () => {
       createdAt: new Date().toISOString().split("T")[0],
       createdBy: currentUser.username,
       creatorId: currentUser.id,
-      isAdminCreator: role === "Admin",
+      isAdminCreator: currentUser.role === "Admin",
       replies: [],
     };
 
@@ -52,7 +52,7 @@ export const Tickets = () => {
       author: currentUser.username,
       content: replyText[id],
       createdAt: new Date().toLocaleString(),
-      isAdmin: role === "Admin",
+      isAdmin: currentUser.role === "Admin",
     };
 
     setTickets(
@@ -67,7 +67,7 @@ export const Tickets = () => {
     setReplyText({ ...replyText, [id]: "" });
   };
 
-  const visibleTickets = role === "Admin" ? tickets : tickets.filter(t => t.creatorId === currentUser.id);
+  const visibleTickets = role === "Admin" && viewMode === "admin" ? tickets : tickets.filter(t => t.creatorId === currentUser.id);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -205,7 +205,7 @@ export const Tickets = () => {
                     </p>
                   </div>
                 </div>
-                {ticket.status === "open" && role === "Admin" && (
+                {ticket.status === "open" && role === "Admin" && viewMode === "admin" && (
                   <button
                     onClick={() => closeTicket(ticket.id)}
                     className="px-3 py-1.5 border border-white/10 rounded-lg text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors"

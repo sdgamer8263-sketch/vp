@@ -20,7 +20,6 @@ export const ServerNav = ({ serverId }: { serverId: string }) => {
     { name: "File Manager", path: `/server/${serverId}/files`, icon: <Folder size={18} /> },
     { name: "Databases", path: `/server/${serverId}/databases`, icon: <Database size={18} /> },
     { name: "Schedules", path: `/server/${serverId}/schedules`, icon: <Calendar size={18} /> },
-    { name: "Users", path: `/server/${serverId}/users`, icon: <Users size={18} /> },
     { name: "Backups", path: `/server/${serverId}/backups`, icon: <Archive size={18} /> },
     { name: "Network", path: `/server/${serverId}/network`, icon: <Network size={18} /> },
     { name: "Startup", path: `/server/${serverId}/startup`, icon: <PlayCircle size={18} /> },

@@ -23,11 +23,14 @@ export const Admin = () => {
     discordSettings,
     setDiscordSettings,
     socialMedia,
-    setSocialMedia
+    setSocialMedia,
+    cloudflareSettings,
+    setCloudflareSettings
   } = useAppContext();
   const [localTheme, setLocalTheme] = useState(theme);
   const [localDiscord, setLocalDiscord] = useState(discordSettings);
   const [localSocial, setLocalSocial] = useState(socialMedia);
+  const [localCloudflare, setLocalCloudflare] = useState(cloudflareSettings);
   const [saved, setSaved] = useState(false);
 
   if (role !== "Admin" || viewMode !== "admin") {
@@ -48,6 +51,7 @@ export const Admin = () => {
     setTheme(localTheme);
     setDiscordSettings(localDiscord);
     setSocialMedia(localSocial);
+    setCloudflareSettings(localCloudflare);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
@@ -307,6 +311,8 @@ export const Admin = () => {
               </label>
               <input
                 type="text"
+                value={localCloudflare.baseDomain}
+                onChange={(e) => setLocalCloudflare({ ...localCloudflare, baseDomain: e.target.value })}
                 placeholder="example.com"
                 className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-cyan-500/50 outline-none font-mono text-sm"
               />
@@ -321,6 +327,8 @@ export const Admin = () => {
               </label>
               <input
                 type="password"
+                value={localCloudflare.apiToken}
+                onChange={(e) => setLocalCloudflare({ ...localCloudflare, apiToken: e.target.value })}
                 placeholder="••••••••••••••••"
                 className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-cyan-500/50 outline-none font-mono text-sm"
               />
@@ -331,6 +339,8 @@ export const Admin = () => {
               </label>
               <input
                 type="text"
+                value={localCloudflare.zoneId}
+                onChange={(e) => setLocalCloudflare({ ...localCloudflare, zoneId: e.target.value })}
                 placeholder="Zone ID"
                 className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-cyan-500/50 outline-none font-mono text-sm"
               />

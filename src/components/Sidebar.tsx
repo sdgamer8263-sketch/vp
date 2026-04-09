@@ -36,12 +36,19 @@ export const Sidebar = () => {
 
   const supportsPlugins = ["Paper", "Spigot", "Bukkit"].includes(software);
   const supportsMods = ["Fabric", "Forge"].includes(software);
-  const supportsAddons = ["Bedrock"].includes(software);
+  const supportsAddons = ["Bedrock", "Pocket Edition"].includes(software);
 
   const navItems = [
     { name: "Servers", path: "/", icon: <Server size={20} /> },
     { name: "Tickets", path: "/tickets", icon: <Ticket size={20} /> },
   ];
+
+  if (!isServerRelatedPage) {
+    navItems.push({ name: "Users", path: "/users", icon: <Users size={20} /> });
+    if (role === "Admin" && viewMode === "admin") {
+      navItems.push({ name: "Pterodactyl Admin", path: "/admin/pterodactyl", icon: <Settings size={20} /> });
+    }
+  }
 
   if (isServerRelatedPage && serverId) {
     navItems.splice(

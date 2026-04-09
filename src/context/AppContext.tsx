@@ -30,7 +30,7 @@ export interface Server {
   id: string;
   name: string;
   ownerId: string;
-  software: "Paper" | "Bedrock" | "Node.js" | "Python" | "Fabric" | "Forge" | "Vanilla" | "CS:GO";
+  software: "Paper" | "Spigot" | "Bukkit" | "Bedrock" | "Pocket Edition" | "Node.js" | "Python" | "Fabric" | "Forge" | "Vanilla" | "CS:GO";
   status: "running" | "offline" | "suspended";
   cpu: { used: number; total: number };
   ram: { used: number; total: number };
@@ -50,6 +50,12 @@ export interface Ticket {
   creatorId: string;
   isAdminCreator?: boolean;
   replies?: any[];
+}
+
+export interface CloudflareSettings {
+  baseDomain: string;
+  apiToken: string;
+  zoneId: string;
 }
 
 export interface AppState {
@@ -73,6 +79,8 @@ export interface AppState {
     renewalDaysWarning: number;
   };
   setDiscordSettings: (settings: any) => void;
+  cloudflareSettings: CloudflareSettings;
+  setCloudflareSettings: (settings: CloudflareSettings) => void;
   viewMode: "user" | "admin";
   setViewMode: (mode: "user" | "admin") => void;
 }
@@ -127,6 +135,12 @@ const initialServers: Server[] = [
   },
 ];
 
+const defaultCloudflareSettings: CloudflareSettings = {
+  baseDomain: "",
+  apiToken: "",
+  zoneId: "",
+};
+
 const AppContext = createContext<AppState | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
@@ -142,8 +156,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     renewalChannel: "",
     renewalDaysWarning: 7,
   });
+  const [cloudflareSettings, setCloudflareSettings] = useState<CloudflareSettings>(defaultCloudflareSettings);
 
-  const currentUser = users.find(u => u.role === role) || users[0];
+  const currentUser = role === "Admin" && viewMode === "user"
+    ? (users.find(u => u.role === "Standard") || users[0])
+    : (users.find(u => u.role === role) || users[0]);
 
   const updateServerStatus = (id: string, status: "running" | "offline" | "suspended") => {
     setServers((prev) => prev.map((s) => (s.id === id ? { ...s, status } : s)));
@@ -168,6 +185,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setTickets,
         discordSettings,
         setDiscordSettings,
+        cloudflareSettings,
+        setCloudflareSettings,
         viewMode,
         setViewMode,
       }}

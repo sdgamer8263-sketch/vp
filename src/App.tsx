@@ -5,6 +5,7 @@ import { Layout } from "./components/Layout";
 import { Dashboard } from "./pages/Dashboard";
 import { ServerView } from "./pages/ServerView";
 import { Tickets } from "./pages/Tickets";
+import { Users } from "./pages/Users";
 import { Admin } from "./pages/Admin";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
@@ -20,6 +21,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="server/:id/*" element={<ServerView />} />
             <Route path="tickets" element={<Tickets />} />
+            <Route path="users" element={<Users />} />
             <Route path="admin" element={<Admin />} />
           </Route>
         </Routes>

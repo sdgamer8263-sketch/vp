@@ -60,7 +60,7 @@ export const Dashboard = () => {
   };
 
   // Filter servers: Admin sees all, User sees only theirs
-  const visibleServers = role === "Admin" ? servers : servers.filter(s => s.ownerId === currentUser.id);
+  const visibleServers = role === "Admin" && viewMode === "admin" ? servers : servers.filter(s => s.ownerId === currentUser.id);
 
   return (
     <div className="space-y-8">
@@ -72,7 +72,7 @@ export const Dashboard = () => {
           </p>
         </div>
         <div className="flex space-x-3">
-          {role === "Admin" && (
+          {role === "Admin" && viewMode === "admin" && (
             <>
               <a
                 href="/admin" // Simulated link to actual pterodactyl admin
@@ -128,10 +128,13 @@ export const Dashboard = () => {
                   className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none"
                 >
                   <option value="Paper">Minecraft: Java Edition (Paper)</option>
+                  <option value="Spigot">Minecraft: Java Edition (Spigot)</option>
+                  <option value="Bukkit">Minecraft: Java Edition (Bukkit)</option>
                   <option value="Fabric">Minecraft: Java Edition (Fabric)</option>
                   <option value="Forge">Minecraft: Java Edition (Forge)</option>
                   <option value="Vanilla">Minecraft: Java Edition (Vanilla)</option>
                   <option value="Bedrock">Minecraft: Bedrock Edition</option>
+                  <option value="Pocket Edition">Minecraft: Pocket Edition</option>
                   <option value="Node.js">Node.js App</option>
                   <option value="Python">Python Bot</option>
                   <option value="CS:GO">CS:GO</option>
@@ -300,57 +303,6 @@ export const Dashboard = () => {
           </div>
         ))}
       </div>
-
-      {/* Users List Section */}
-      {role === "Admin" && (
-        <div className="mt-12">
-          <div className="flex items-center space-x-3 mb-6">
-            <Users size={24} className="text-white" />
-            <h2 className="text-2xl font-bold text-white">Users</h2>
-          </div>
-          <div className="bg-black/30 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-6 py-4 font-semibold text-gray-300">Username</th>
-                    <th className="px-6 py-4 font-semibold text-gray-300">Email</th>
-                    <th className="px-6 py-4 font-semibold text-gray-300">Role</th>
-                    <th className="px-6 py-4 font-semibold text-gray-300">Joined</th>
-                    <th className="px-6 py-4 font-semibold text-gray-300 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  {users.map((user) => (
-                    <tr key={user.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4 text-white font-medium flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-                          {user.username.charAt(0).toUpperCase()}
-                        </div>
-                        <span>{user.username}</span>
-                      </td>
-                      <td className="px-6 py-4 text-gray-400">{user.email}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                          user.role === "Admin" ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                        }`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-gray-400">{user.createdAt}</td>
-                      <td className="px-6 py-4 text-right">
-                        <button className="text-blue-400 hover:text-blue-300 transition-colors text-xs font-medium">
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
