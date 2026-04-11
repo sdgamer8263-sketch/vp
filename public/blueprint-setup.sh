@@ -35,7 +35,7 @@ info:
   author: sdgamer8263
   icon: fa-paint-brush
 admin:
-  view: admin.blade.php
+  view: admin
 EOF
 
 # 1.5 Create admin view file (Required by Blueprint)
