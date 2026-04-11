@@ -18,6 +18,10 @@ BACKUP_DIR="/var/www/pterodactyl_backup_$(date +%Y%m%d_%H%M%S)"
 # Navigate to panel directory
 cd $PANEL_DIR || { echo "Pterodactyl installation not found at $PANEL_DIR"; exit 1; }
 
+# Put panel in maintenance mode
+echo "Putting panel in maintenance mode..."
+php artisan down
+
 # Create backup
 echo "Creating backup of current panel..."
 mkdir -p $BACKUP_DIR
@@ -27,12 +31,14 @@ echo "Backup created at $BACKUP_DIR"
 
 # Download theme files
 echo "Downloading theme files from GitHub..."
+# Replace this URL with the actual URL where your compiled theme files are hosted
 wget -qO theme.zip https://github.com/sdgamer8263-sketch/my/archive/refs/heads/main.zip
 
 # Extract and install
 echo "Extracting theme files..."
 unzip -qo theme.zip
-cp -r my-main/pterodactyl-theme-code/* $PANEL_DIR/
+# Make sure the path matches where your theme files are located inside the zip
+cp -r my-main/* $PANEL_DIR/
 
 # Clean up downloaded files
 rm -rf theme.zip my-main
@@ -68,6 +74,10 @@ php artisan optimize
 # Set permissions
 echo "Setting correct permissions..."
 chown -R www-data:www-data $PANEL_DIR/*
+
+# Bring panel back online
+echo "Bringing panel back online..."
+php artisan up
 
 echo "Theme installation completed successfully!"
 echo "Please refresh your browser to see the changes."

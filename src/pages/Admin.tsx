@@ -539,10 +539,25 @@ export const Admin = () => {
             <p className="text-sm text-gray-400 mb-4">
               This theme is built as a proper Blueprint Extension. Run this command on your Pterodactyl server to install it automatically.
             </p>
-            <div className="bg-black/80 p-4 rounded-lg font-mono text-sm text-green-400 overflow-x-auto border border-white/5">
+            <div className="bg-black/80 p-4 rounded-lg font-mono text-sm text-green-400 overflow-x-auto border border-white/5 mb-6">
               <code>
                 blueprint -install glasstheme
               </code>
+            </div>
+            
+            <div className="border-t border-white/10 pt-6">
+              <h4 className="text-white font-medium mb-2">Manual Bash Installation</h4>
+              <p className="text-sm text-gray-400 mb-4">
+                If you are not using Blueprint, you can download the auto-installer bash script and run it on your VPS as root.
+              </p>
+              <a 
+                href="/install.sh" 
+                download="install.sh"
+                className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium hover:bg-blue-500/30 transition-colors"
+              >
+                <Upload size={18} className="rotate-180" />
+                <span>Download install.sh</span>
+              </a>
             </div>
           </div>
         </div>

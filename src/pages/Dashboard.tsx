@@ -74,13 +74,13 @@ export const Dashboard = () => {
         <div className="flex space-x-3">
           {role === "Admin" && viewMode === "admin" && (
             <>
-              <a
-                href="/admin" // Simulated link to actual pterodactyl admin
+              <Link
+                to="/admin/pterodactyl"
                 className="px-4 py-2 rounded-lg text-white font-medium shadow-lg transition-all hover:opacity-90 border border-white/10 flex items-center space-x-2 bg-red-500/20 hover:bg-red-500/30 text-red-400"
               >
                 <Shield size={18} />
                 <span>Pterodactyl Admin</span>
-              </a>
+              </Link>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="px-4 py-2 rounded-lg text-white font-medium shadow-lg transition-all hover:opacity-90 border border-white/10"

@@ -1,0 +1,9 @@
+name: GlassTheme
+identifier: glasstheme
+description: A premium glassmorphism theme for Pterodactyl Panel.
+version: 1.0.0
+author: AI Studio
+website: https://pterodactyl.io
+
+# Blueprint will automatically handle the patching and installation
+# when the user runs `blueprint -install glasstheme`

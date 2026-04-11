@@ -7,6 +7,7 @@ import { ServerView } from "./pages/ServerView";
 import { Tickets } from "./pages/Tickets";
 import { Users } from "./pages/Users";
 import { Admin } from "./pages/Admin";
+import { PterodactylAdmin } from "./pages/PterodactylAdmin";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="tickets" element={<Tickets />} />
             <Route path="users" element={<Users />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="admin/pterodactyl" element={<PterodactylAdmin />} />
           </Route>
         </Routes>
       </BrowserRouter>
