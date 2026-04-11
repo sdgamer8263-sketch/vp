@@ -37,8 +37,19 @@ wget -qO theme.zip https://github.com/sdgamer8263-sketch/my/archive/refs/heads/m
 # Extract and install
 echo "Extracting theme files..."
 unzip -qo theme.zip
-# Make sure the path matches where your theme files are located inside the zip
-cp -r my-main/* $PANEL_DIR/
+
+# SAFE COPY: We only copy the resources folder to prevent overwriting core files like package.json
+echo "Installing theme files..."
+if [ -d "my-main/resources" ]; then
+    cp -r my-main/resources/* $PANEL_DIR/resources/
+elif [ -d "my-main/src" ]; then
+    echo "WARNING: Found 'src' instead of 'resources'. Copying to resources/scripts..."
+    cp -r my-main/src/* $PANEL_DIR/resources/scripts/
+else
+    echo "WARNING: Could not find 'resources' folder in your GitHub repo."
+    echo "Copying all files, but skipping package.json to prevent breaking the panel..."
+    rsync -av --exclude='package.json' --exclude='vite.config.ts' my-main/ $PANEL_DIR/
+fi
 
 # Clean up downloaded files
 rm -rf theme.zip my-main
