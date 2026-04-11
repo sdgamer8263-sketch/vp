@@ -24,14 +24,16 @@ echo "Setting up extension files..."
 mkdir -p glasstheme-ext
 cd glasstheme-ext
 
-# 1. Create blueprint.yml
-cat << 'EOF' > blueprint.yml
-name: GlassTheme
-identifier: glasstheme
-description: A custom glassmorphism theme for Pterodactyl.
-version: 1.0.0
-author: sdgamer8263
-icon: fa-paint-brush
+# 1. Create conf.yml (Blueprint configuration file)
+cat << 'EOF' > conf.yml
+info:
+  name: GlassTheme
+  identifier: glasstheme
+  description: A custom glassmorphism theme for Pterodactyl.
+  version: 1.0.0
+  target: any
+  author: sdgamer8263
+  icon: fa-paint-brush
 EOF
 
 # 2. Create CSS file (The magic that makes it glass without breaking React)
@@ -79,25 +81,24 @@ button.bg-neutral-700:hover {
 EOF
 
 # 3. Create install script (Injects CSS into the wrapper)
-mkdir -p scripts
-cat << 'EOF' > scripts/install.sh
+cat << 'EOF' > install.sh
 #!/bin/bash
 echo "Applying GlassTheme CSS injection..."
-if ! grep -q "glass.css" resources/views/templates/wrapper.blade.php; then
-    sed -i 's|</head>|<link rel="stylesheet" href="/assets/extensions/glasstheme/glass.css">\n</head>|g' resources/views/templates/wrapper.blade.php
+if ! grep -q "glass.css" /var/www/pterodactyl/resources/views/templates/wrapper.blade.php; then
+    sed -i 's|</head>|<link rel="stylesheet" href="/assets/extensions/glasstheme/glass.css">\n</head>|g' /var/www/pterodactyl/resources/views/templates/wrapper.blade.php
 fi
 echo "CSS injected successfully."
 EOF
 
 # 4. Create remove script
-cat << 'EOF' > scripts/remove.sh
+cat << 'EOF' > remove.sh
 #!/bin/bash
 echo "Removing GlassTheme CSS injection..."
-sed -i '/glass.css/d' resources/views/templates/wrapper.blade.php
+sed -i '/glass.css/d' /var/www/pterodactyl/resources/views/templates/wrapper.blade.php
 echo "CSS removed successfully."
 EOF
 
-chmod +x scripts/*.sh
+chmod +x *.sh
 
 # 5. Package into .blueprint file
 echo "Packaging into glasstheme.blueprint..."
