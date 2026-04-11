@@ -34,6 +34,41 @@ info:
   target: any
   author: sdgamer8263
   icon: fa-paint-brush
+admin:
+  view: admin.blade.php
+EOF
+
+# 1.5 Create admin view file (Required by Blueprint)
+cat << 'EOF' > admin.blade.php
+@extends('layouts.admin')
+@include('partials/admin.settings.nav', ['activeTab' => 'basic'])
+
+@section('title')
+    GlassTheme Settings
+@endsection
+
+@section('content-header')
+    <h1>GlassTheme<small>A custom glassmorphism theme.</small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ route('admin.index') }}">Admin</a></li>
+        <li class="active">Extensions</li>
+    </ol>
+@endsection
+
+@section('content')
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">GlassTheme Installed Successfully</h3>
+                </div>
+                <div class="box-body">
+                    <p>The GlassTheme CSS has been injected into your panel. Your panel should now have a glassmorphism look!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 EOF
 
 # 2. Create CSS file (The magic that makes it glass without breaking React)
